@@ -18,7 +18,7 @@ function PanelAdmin() {
             }
         }
         fetchProductos();
-    }, []);
+    }, [productos]);
     const createProducto = () => {
         setMostrarForm(true);
         setProductoSeleccionado(null);
@@ -39,6 +39,7 @@ function PanelAdmin() {
                 <nav>
                     <button>Productos</button> <br />
                     <button>Pedidos</button>
+                    <button>Categorias</button>
                 </nav>
             </aside>
 
@@ -55,6 +56,7 @@ function PanelAdmin() {
                                 <th>Nombre</th>
                                 <th>Precio</th>
                                 <th>Stock</th>
+                                <th>Categoría</th>
                                 <th>Acciones</th>
                             </tr>
                         </thead>
@@ -64,6 +66,7 @@ function PanelAdmin() {
                                     <td>{producto.nombre.slice(0, 15)}...</td>
                                     <td>$ {Number(producto.precio).toFixed(0)}</td>
                                     <td>{producto.stock}</td>
+                                    <td>{producto.categoria?.nombre}</td>
                                     <td className='acciones'>
                                         <Button text='🟩' onClick={() => { editProduto(producto); }} />
                                         <Button text='❌' onClick={() => { deleteProducto(producto.id); }} />

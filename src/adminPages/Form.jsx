@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { crearItem, actualizarItem } from '../services/api.js';
+import { obtenerItems, crearItem, actualizarItem } from '../services/api.js';
 import "../styles/admin/form.css"
 
 function Form({ producto, onCancelar }) {
@@ -10,9 +10,11 @@ function Form({ producto, onCancelar }) {
         descripcion: '',
         stock: '',
         especificacionesTecnicas: '',
-        categoria: ''
+        idCategoria: ''
     });
-    
+
+    const [categorias, setCategorias] = useState([]);
+
     useEffect(() => {
         setFormulario({
             nombre: producto?.nombre || '',
@@ -20,9 +22,23 @@ function Form({ producto, onCancelar }) {
             descripcion: producto?.descripcion || '',
             stock: producto?.stock || '',
             especificacionesTecnicas: producto?.especificacionesTecnicas || '',
-            categoria: producto?.categoria || ''
+            idCategoria: producto?.idCategoria || ''
         });
     }, [producto]);
+
+    // Traer categorías
+    useEffect(() => {
+        const fetchCategorias = async () => {
+            try {
+                const data = await obtenerItems('categorias');
+                setCategorias(data);
+            } catch (error) {
+                console.error('Error al obtener categorías:', error);
+            }
+        };
+
+        fetchCategorias();
+    }, []);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -40,7 +56,8 @@ function Form({ producto, onCancelar }) {
             const datos = {
                 ...formulario,
                 precio: Number(formulario.precio),
-                stock: Number(formulario.stock)
+                stock: Number(formulario.stock),
+                idCategoria: Number(formulario.idCategoria)
             };
 
             if (producto) {
@@ -117,13 +134,24 @@ function Form({ producto, onCancelar }) {
                     </div>
 
                     <div className="form-group">
-                        <input
-                            type="text"
-                            name="categoria"
-                            value={formulario.categoria}
+                        <select
+                            name="idCategoria"
+                            value={formulario.idCategoria}
                             onChange={handleChange}
-                            placeholder="Categoría"
-                        />
+                        >
+                            <option value="">
+                                Seleccionar categoría
+                            </option>
+
+                            {categorias.map((categoria) => (
+                                <option
+                                    key={categoria.id}
+                                    value={categoria.id}
+                                >
+                                    {categoria.nombre}
+                                </option>
+                            ))}
+                        </select>
                     </div>
 
                     <div className='form-actions'>

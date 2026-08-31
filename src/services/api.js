@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://127.0.0.1:3000/api/';
+const API_URL = import.meta.env.VITE_API_URL || 'http://127.0.0.1:3000/';
 
 const api = axios.create({
     baseURL: API_URL,
@@ -24,16 +24,17 @@ api.interceptors.response.use(
     }
 );
 
-export const obtenerItems = async (tipo) => {
-    try {
-        const response = await api.get(`${tipo}/`);
-        return response;
-    } catch (error) {
-        console.error('Error en la petición:', error);
-        throw error;
-    }
-};
+// export const obtenerItems = async (tipo) => {
+//     try {
+//         const response = await api.get(`${tipo}/`);
+//         return response;
+//     } catch (error) {
+//         console.error('Error en la petición:', error);
+//         throw error;
+//     }
+// };
 
+export const obtenerItems = (tipo) => api.get(`${tipo}/`);
 export const crearItem = (tipo, body) => api.post(`${tipo}/`, body);
 export const actualizarItem = (tipo, id, body) => api.put(`${tipo}/${id}`, body);
 export const eliminarItem = (tipo, id) => api.delete(`${tipo}/${id}`);
