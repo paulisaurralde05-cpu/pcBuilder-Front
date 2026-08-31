@@ -1,0 +1,56 @@
+@reference "../index.css";
+
+.panel-admin {
+    @apply min-h-screen flex bg-gray-100;
+}
+/* SIDEBAR */
+.sidebar {
+    @apply fixed left-0 top-0 h-screen w-64 bg-gray-900 text-white p-6;
+}
+
+.sidebar h2 {
+    @apply text-2xl font-bold mb-6;
+}
+
+.sidebar nav {
+    @apply flex flex-col gap-3;
+}
+
+.sidebar button {
+    @apply text-left font-bold p-3 rounded-lg hover:bg-gray-700 transition;
+}
+
+/* CONTENIDO ADMIN */
+
+.contenido-admin {
+    @apply ml-64 w-full p-8;
+}
+
+.contenido-admin h1 {
+    @apply text-3xl font-bold mb-30;
+}
+
+/* TABLA */
+
+.table-container {
+    @apply mt-8 bg-gray-900 rounded-lg shadow overflow-hidden;
+}
+
+table {
+    @apply w-full border-collapse border text-white text-center;
+}
+
+th {
+    @apply  p-4 bg-gray-800;
+}
+td{
+    @apply p-2 border-t;
+}
+
+.crear {
+    @apply absolute right-10 top-20 bg-red-700 text-white font-bold py-4 px-6 rounded-lg mb-4;
+}
+
+.acciones {
+    @apply flex justify-center gap-2;
+}
