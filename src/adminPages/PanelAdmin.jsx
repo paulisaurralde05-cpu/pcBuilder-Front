@@ -11,28 +11,47 @@ function PanelAdmin() {
     const [mostrarForm, setMostrarForm] = useState(false);
     const [productoSeleccionado, setProductoSeleccionado] = useState(null);
 
-    useEffect(() => {
-        const fetchProductos = async () => {
-            try {
-                const data = await obtenerItems('productos');
-                setProductos(data);
-            } catch (error) {
-                console.error('Error al obtener los productos:', error);
-            }
+    const fetchProductos = async () => {
+        try {
+            const data = await obtenerItems('productos');
+            setProductos(data);
+        } catch (error) {
+            console.error('Error al obtener los productos:', error);
         }
-        fetchProductos();
+    };
+
+    useEffect(() => {
+        let isMounted = true;
+
+        obtenerItems('productos')
+            .then((data) => {
+                if (isMounted) setProductos(data);
+            })
+            .catch((error) => console.error('Error al obtener los productos:', error));
+
+        return () => {
+            isMounted = false;
+        };
     }, []);
+
     const createProducto = () => {
         setMostrarForm(true);
         setProductoSeleccionado(null);
-    }
+    };
+
     const editProduto = (producto) => {
         setProductoSeleccionado(producto);
         setMostrarForm(true);
-    }
-    const deleteProducto = (id) => {
-        eliminarItem('productos', id);
-    }
+    };
+
+    const deleteProducto = async (id) => {
+        try {
+            await eliminarItem('productos', id);
+            await fetchProductos();
+        } catch (error) {
+            console.error('Error al eliminar producto:', error);
+        }
+    };
 
     return (
         <div className='panel-admin'>
@@ -43,9 +62,15 @@ function PanelAdmin() {
                 <h1>Panel de Administración</h1>
                 <Button className='crear' text='Crear' onClick={createProducto} />
 
-                {mostrarForm && <Form producto={productoSeleccionado} onCancelar={() => setMostrarForm(false)} />}
+                {mostrarForm && (
+                    <Form
+                        producto={productoSeleccionado}
+                        onCancelar={() => setMostrarForm(false)}
+                        onGuardar={fetchProductos}
+                    />
+                )}
 
-                <div className='table-container' >
+                <div className='table-container'>
                     <table>
                         <thead>
                             <tr>
@@ -64,8 +89,8 @@ function PanelAdmin() {
                                     <td>{producto.stock}</td>
                                     <td>{producto.categoria?.nombre}</td>
                                     <td className='acciones'>
-                                        <Button text='🟩' onClick={() => { editProduto(producto); }} />
-                                        <Button text='❌' onClick={() => { deleteProducto(producto.id); }} />
+                                        <Button text='🟩' onClick={() => editProduto(producto)} />
+                                        <Button text='❌' onClick={() => deleteProducto(producto.id)} />
                                     </td>
                                 </tr>
                             ))}
@@ -74,7 +99,7 @@ function PanelAdmin() {
                 </div>
             </div>
         </div>
-    )
+    );
 }
 
-export default PanelAdmin
+export default PanelAdmin;

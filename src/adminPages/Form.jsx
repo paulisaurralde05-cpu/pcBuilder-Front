@@ -1,10 +1,11 @@
+
 import { useEffect, useState } from 'react';
 import { obtenerItems, crearItem, actualizarItem } from '../services/api.js';
 import "../styles/admin/form.css"
 
-function Form({ producto, onCancelar }) {
-
+function Form({ producto, onCancelar, onGuardar }) {
     const [formulario, setFormulario] = useState({
+
         nombre: '',
         precio: '',
         descripcion: '',
@@ -42,7 +43,6 @@ function Form({ producto, onCancelar }) {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-
         setFormulario({
             ...formulario,
             [name]: value
@@ -66,8 +66,8 @@ function Form({ producto, onCancelar }) {
                 await crearItem('productos', datos);
             }
 
+            if (onGuardar) onGuardar();
             onCancelar();
-
         } catch (error) {
             console.error('Error al guardar el producto:', error);
         }
@@ -83,7 +83,6 @@ function Form({ producto, onCancelar }) {
                 <button className='modal-close' onClick={onCancelar}>X</button>
 
                 <form onSubmit={handleSubmit} className="formulario-producto">
-
                     <div className='form-group'>
                         <input
                             type="text"
@@ -162,12 +161,8 @@ function Form({ producto, onCancelar }) {
                         <button className='btn-guardar' type="submit">
                             {producto ? 'Actualizar Producto' : 'Crear Producto'}
                         </button>
-
                     </div>
-
-
                 </form>
-
             </div>
         </div>
     );
