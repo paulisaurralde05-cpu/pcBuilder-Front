@@ -24,17 +24,9 @@ api.interceptors.response.use(
     }
 );
 
-// export const obtenerItems = async (tipo) => {
-//     try {
-//         const response = await api.get(`${tipo}/`);
-//         return response;
-//     } catch (error) {
-//         console.error('Error en la petición:', error);
-//         throw error;
-//     }
-// };
 
 export const obtenerItems = (tipo) => api.get(`${tipo}/`);
+export const obtenerItemsXid = (tipo, id) => api.get(`${tipo}/${id}`);
 export const crearItem = (tipo, body) => api.post(`${tipo}/`, body);
 export const actualizarItem = (tipo, id, body) => api.put(`${tipo}/${id}`, body);
 export const eliminarItem = (tipo, id) => api.delete(`${tipo}/${id}`);

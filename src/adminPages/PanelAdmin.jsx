@@ -1,8 +1,11 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { eliminarItem, obtenerItems } from '../services/api.js';
 import Button from '../components/button.jsx';
-import '../styles/admin/panelAdmin.css';
 import Form from './Form.jsx';
+import AsideAdmin from './AsideAdmin.jsx';
+import '../styles/admin/panelAdmin.css';
+
+
 function PanelAdmin() {
     const [productos, setProductos] = useState([]);
     const [mostrarForm, setMostrarForm] = useState(false);
@@ -18,7 +21,7 @@ function PanelAdmin() {
             }
         }
         fetchProductos();
-    }, [productos]);
+    }, []);
     const createProducto = () => {
         setMostrarForm(true);
         setProductoSeleccionado(null);
@@ -34,14 +37,7 @@ function PanelAdmin() {
     return (
         <div className='panel-admin'>
 
-            <aside className='sidebar'>
-                <h2>Pc Builder</h2>
-                <nav>
-                    <button>Productos</button> <br />
-                    <button>Pedidos</button>
-                    <button>Categorias</button>
-                </nav>
-            </aside>
+            <AsideAdmin />
 
             <div className='contenido-admin'>
                 <h1>Panel de Administración</h1>

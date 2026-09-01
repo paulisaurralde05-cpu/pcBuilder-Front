@@ -2,6 +2,10 @@ import { useEffect, useState } from "react"
 import { obtenerItems, eliminarItem } from "../services/api"
 import Button from "../components/button";
 import FormCategory from "./FormCategory";
+import AsideAdmin from "./AsideAdmin.jsx";
+import '../styles/admin/panelAdmin.css';
+
+
 function Categories() {
     const [category, setCategory] = useState([]);
     const [mostrarForm, setMostrarForm] = useState(false);
@@ -30,41 +34,39 @@ function Categories() {
         eliminarItem('categorias', id)
     }
     return (
-        <div>
+        <div className="panel-admin">
+            <AsideAdmin />
 
-            <Button className='crear' text='Crear' onClick={createCategory} />
+            <div className='contenido-admin'>
 
-            {mostrarForm && <FormCategory category={categorySeleccionada} onCancelar={()=> setMostrarForm(false)} />}
-            {/* mostrar */}
-            <div className='table-container' >
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Nombre</th>
-                            <th>Descripción</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {category?.map((c) => (
-                            <tr key={c.id}>
-                                <td>{c.nombre.slice(0, 15)}</td>
-                                <td>{c.descripcion}</td>
-                                <td className='acciones'>
-                                    <Button text='🟩' onClick={() => { editCategory(c); }} />
-                                    <Button text='❌' onClick={() => { deleteCategory(c.id); }} />
-                                </td>
+                <h1>Categorías</h1>
+                <Button className='crear' text='Crear' onClick={createCategory} />
+                {mostrarForm && <FormCategory category={categorySeleccionada} onCancelar={() => setMostrarForm(false)} />}
+
+                <div className='table-container' >
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Descripción</th>
+                                <th>Acciones</th>
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            {category?.map((c) => (
+                                <tr key={c.id}>
+                                    <td>{c.nombre.slice(0, 15)}</td>
+                                    <td>{c.descripcion}</td>
+                                    <td className='acciones'>
+                                        <Button text='🟩' onClick={() => { editCategory(c); }} />
+                                        <Button text='❌' onClick={() => { deleteCategory(c.id); }} />
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
             </div>
-            Categories
-            {/* crear */}
-
-            {/* editar */}
-
-            {/* eliminar */}
 
         </div>
     )

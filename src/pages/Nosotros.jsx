@@ -1,13 +1,13 @@
 import React from 'react'
 import Header from '../components/Header.jsx';
-function Cart() {
+function Nosotros() {
   return (
     <div>
       <Header />
-      <h1>Carrito de Compras</h1>
-      <p>Contenido del carrito...</p>
+      <h1>Nosotros</h1>
+      <p>Información sobre nuestro ecommerce...</p>
     </div>
   )
 }
 
-export default Cart
+export default Nosotros
