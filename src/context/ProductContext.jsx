@@ -1,9 +1,3 @@
-import React from 'react'
+import { createContext } from 'react';
 
-function ProductContext() {
-  return (
-    <div>ProductContext</div>
-  )
-}
-
-export default ProductContext
+export const ProductContext = createContext();

@@ -1,32 +1,19 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { crearItem, actualizarItem } from '../services/api.js';
-import "../styles/admin/form.css"
+import "../styles/admin/form.css";
 
-function Form({ producto, onCancelar }) {
-
+function Form({ producto, onCancelar, onGuardar }) {
     const [formulario, setFormulario] = useState({
-        nombre: '',
-        precio: '',
-        descripcion: '',
-        stock: '',
-        especificacionesTecnicas: '',
-        categoria: ''
+        nombre: producto?.nombre || '',
+        precio: producto?.precio || '',
+        descripcion: producto?.descripcion || '',
+        stock: producto?.stock || '',
+        especificacionesTecnicas: producto?.especificacionesTecnicas || '',
+        categoria: producto?.categoria || ''
     });
-    
-    useEffect(() => {
-        setFormulario({
-            nombre: producto?.nombre || '',
-            precio: producto?.precio || '',
-            descripcion: producto?.descripcion || '',
-            stock: producto?.stock || '',
-            especificacionesTecnicas: producto?.especificacionesTecnicas || '',
-            categoria: producto?.categoria || ''
-        });
-    }, [producto]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-
         setFormulario({
             ...formulario,
             [name]: value
@@ -49,8 +36,8 @@ function Form({ producto, onCancelar }) {
                 await crearItem('productos', datos);
             }
 
+            if (onGuardar) onGuardar();
             onCancelar();
-
         } catch (error) {
             console.error('Error al guardar el producto:', error);
         }
@@ -66,7 +53,6 @@ function Form({ producto, onCancelar }) {
                 <button className='modal-close' onClick={onCancelar}>X</button>
 
                 <form onSubmit={handleSubmit} className="formulario-producto">
-
                     <div className='form-group'>
                         <input
                             type="text"
@@ -134,12 +120,8 @@ function Form({ producto, onCancelar }) {
                         <button className='btn-guardar' type="submit">
                             {producto ? 'Actualizar Producto' : 'Crear Producto'}
                         </button>
-
                     </div>
-
-
                 </form>
-
             </div>
         </div>
     );
