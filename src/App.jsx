@@ -2,7 +2,8 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { UserProvider } from './context/UserProvider';
 import { ProductProvider } from './context/ProductProvider';
 import PanelAdmin from './adminPages/PanelAdmin.jsx';
-import Login from './components/login';
+import Login from './components/Login.jsx';
+import LoginAdmin from "./adminPages/LoginAdmin.jsx";
 import Register from './components/Register';
 import Home from './pages/Home';
 import ProductDetail from './pages/ProductDetail.jsx';
@@ -12,12 +13,13 @@ import Cart from './pages/Cart.jsx';
 
 function App() {
   return (
-    < UserProvider >
+    <UserProvider>
       <ProductProvider>
           <Routes>
             {/* Rutas Privadas */}
             <Route path="/admin" element={<PanelAdmin />} />
             <Route path="/admin/categories" element={<Categories />} />
+            <Route path="/admin/login" element={<LoginAdmin />} />
             <Route path="/login" element={<Login />} />
             <Route path="/registro" element={<Register />} />
 
@@ -29,9 +31,8 @@ function App() {
             <Route path="*" element={<Login />} />
           </Routes>
       </ProductProvider>
-    </UserProvider >
+    </UserProvider>
   );
-
 }
 
 export default App;
