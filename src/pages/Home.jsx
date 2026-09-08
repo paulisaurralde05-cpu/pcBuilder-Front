@@ -3,38 +3,18 @@ import Header from '../components/Header.jsx';
 
 import { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { UserContext } from '../context/UserContext.jsx';
 import { ProductContext } from '../context/ProductContext.jsx';
 
 export const Home = () => {
-  const { usuario, logout } = useContext(UserContext);
+  // const { usuario, logout } = useContext(UserContext);
   const { productos = [] } = useContext(ProductContext) || {};
   const navigate = useNavigate();
 
-  const handleLogout = () => {
-    if (logout) {
-      logout();
-    } else {
-      localStorage.removeItem('token');
-      localStorage.removeItem('usuario');
-    }
-    navigate('/login');
-  };
 
   return (
     <div className="space-y-8 text-slate-100">
-      <header className="flex items-center justify-between rounded-xl bg-neutral-900 px-6 py-4 border border-neutral-800">
-        <h1 className="text-lg font-medium text-slate-200">
-          Hola, <span className="font-bold text-white">{usuario?.nombre || 'Usuario'}</span>
-        </h1>
-        <button
-          onClick={handleLogout}
-          type="button"
-          className="rounded-lg bg-neutral-800 px-3.5 py-1.5 text-xs font-semibold text-slate-300 transition hover:bg-red-600 hover:text-white cursor-pointer"
-        >
-          Cerrar Sesión
-        </button>
-      </header>
+      
+      <Header></Header>
 
       <section className="rounded-2xl bg-neutral-900 p-8 border border-neutral-800">
         <div className="max-w-md space-y-3">
