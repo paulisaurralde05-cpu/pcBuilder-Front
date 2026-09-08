@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { UserProvider } from './context/UserProvider';
-import { ProductProvider } from './context/ProductProvider';
+import { UserProvider } from './context/UserProvider.jsx';
+import { ProductProvider } from './context/ProductProvider.jsx';
 import PanelAdmin from './adminPages/PanelAdmin.jsx';
 import Login from './components/Login.jsx';
 import LoginAdmin from "./adminPages/LoginAdmin.jsx";
