@@ -16,15 +16,15 @@ function Header() {
   };
   return (
 
-    <header className="flex items-center justify-between rounded-xl bg-neutral-900 px-6 py-4 border border-neutral-800">
-      <h1 className="text-lg font-medium text-slate-200">
-        Hola, <span className="font-bold text-white">{user?.nombre || 'Usuario'}</span>
+    <header className="flex items-center justify-between rounded-xl bg-white px-6 py-4 border border-slate-700">
+      <h1 className="text-lg font-medium text-slate-700">
+        Hola, <span className="font-bold text-slate-800">{user?.nombre || 'Usuario'}</span>
       </h1>
 
       <ul className="flex items-center gap-4 text-lg font-medium ">
-        <li className='text-white'><Link to="/home">Inicio</Link></li>
-        <li className='text-white'><Link to="/nosotros">Nosotros</Link></li>
-        <li className='text-white'><Link to="/carrito">Carrito</Link></li>
+        <li className='text-slate-700'><Link to="/home">Inicio</Link></li>
+        <li className='text-slate-700'><Link to="/nosotros">Nosotros</Link></li>
+        <li className='text-slate-700'><Link to="/carrito">Carrito</Link></li>
       </ul>
       {user ? (
 
