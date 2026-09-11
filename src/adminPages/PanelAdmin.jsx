@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react'
-import { eliminarItem, obtenerItems } from '../services/api.js';
+import { useEffect, useState, useCallback } from 'react'
+import { eliminarItem, obtenerItems, buscarItems } from '../services/api.js';
 import Button from '../components/button.jsx';
 import Form from './Form.jsx';
 import AsideAdmin from './AsideAdmin.jsx';
@@ -11,14 +11,37 @@ function PanelAdmin() {
     const [mostrarForm, setMostrarForm] = useState(false);
     const [productoSeleccionado, setProductoSeleccionado] = useState(null);
 
-    const fetchProductos = async () => {
+    // BUSCAR PRODUCTOS Y PAGINACIÓN
+    const [busqueda, setBusqueda] = useState('');
+    const [pagina, setPagina] = useState(1);
+    const [limite, setLimite] = useState(5);
+    const [total, setTotal] = useState(0);
+    const [totalPaginas, setTotalPaginas] = useState(1);
+
+    const cargarProductos = useCallback(async () => {
         try {
-            const data = await obtenerItems('productos');
-            setProductos(data);
+            const params = {
+                pagina,
+                limite,
+            }
+            if (busqueda.trim() !== '') {
+                params.busqueda = busqueda.trim();
+            }
+            const respuesta = await buscarItems('productos', params);
+            if (respuesta && respuesta.productos) {
+                setProductos(respuesta.productos);
+                setTotal(respuesta.total || 0);
+                setTotalPaginas(respuesta.totalPaginas || 1);
+            } else if (Array.isArray(respuesta)) {
+                setProductos(respuesta);
+                setTotal(respuesta.length);
+                setTotalPaginas(1);
+            }
+
         } catch (error) {
-            console.error('Error al obtener los productos:', error);
+            console.error('Error al buscar productos:', error);
         }
-    };
+    }, [pagina, limite, busqueda]);
 
     useEffect(() => {
         let isMounted = true;
