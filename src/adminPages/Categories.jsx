@@ -3,7 +3,6 @@ import { obtenerItems, eliminarItem } from "../services/api"
 import Button from "../components/button";
 import FormCategory from "./FormCategory";
 import AsideAdmin from "./AsideAdmin.jsx";
-import '../styles/admin/panelAdmin.css';
 
 
 function Categories() {

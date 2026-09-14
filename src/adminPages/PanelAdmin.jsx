@@ -3,8 +3,7 @@ import { eliminarItem, obtenerItems, buscarItems } from '../services/api.js';
 import Button from '../components/button.jsx';
 import Form from './Form.jsx';
 import AsideAdmin from './AsideAdmin.jsx';
-import '../styles/admin/panelAdmin.css';
-
+import { Menu, Trash, Pencil, Plus } from 'lucide-react'
 
 function PanelAdmin() {
     const [productos, setProductos] = useState([]);
@@ -17,6 +16,8 @@ function PanelAdmin() {
     const [limite, setLimite] = useState(5);
     const [total, setTotal] = useState(0);
     const [totalPaginas, setTotalPaginas] = useState(1);
+    // ABRIR Y CERRAR ASIDE
+    const [isOpen, setIsOpen] = useState(true);
 
     const cargarProductos = useCallback(async () => {
         try {
@@ -93,13 +94,18 @@ function PanelAdmin() {
     const finRegistro = Math.min(pagina * limite, total);
 
     return (
-        <div className='panel-admin'>
+        <div className='flex bg-[#070709] min-h-screen'>
+            <AsideAdmin isOpen={isOpen} />
 
-            <AsideAdmin />
 
+            <div className={`${isOpen ? 'ml-[16rem]' : 'ml-0'} flex-1 p-8 transition-all duration-300`}>
+                <button className='cursor-pointer text-white' onClick={() => setIsOpen(!isOpen)}>
+                    <Menu size={30} />
+                </button>
+                <div className='border-b border-gray-600 my-4'></div>
 
-            <div className='contenido-admin'>
-                <h1>Panel de Administración</h1>
+                <h1 className='text-2xl text-white'>Productos</h1>
+                <h2 className='text-lg text-gray-300 mb-4'>Gestiona tus productos</h2>
                 <div className="relative md:col-span-5">
                     <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
                         <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -125,47 +131,53 @@ function PanelAdmin() {
                         </button>
                     )}
                 </div>
-                <Button className='crear' text='Crear' onClick={createProducto} />
+                <button className='absolute right-10 top-30 bg-blue-800 text-white font-bold py-4 px-6 rounded-lg mb-4 flex items-center gap-2 hover:bg-blue-700 transition' onClick={createProducto}>
+                    <Plus size={30}/> 
+                    <span>Crear Producto</span>
+                </button>
 
                 {mostrarForm && (
                     <Form
                         producto={productoSeleccionado}
                         onCancelar={() => setMostrarForm(false)}
-                            // onGuardar={fetchProductos}
+                    // onGuardar={fetchProductos}
                     />
                 )}
 
-                <div className='table-container'>
-                    <table>
-                        <thead>
+                <div className=' mt-8 bg-[#1E1F24] rounded-t overflow-hidden'>
+                    <table className='w-full text-center text-sm text-gray-300 '>
+                        <thead className='bg-[#B00020]/30  text-gray-100'>
                             <tr>
-                                <th>Nombre</th>
-                                <th>Precio</th>
+                                <th className='p-4'>Nombre</th>
+                                <th >Precio($)</th>
                                 <th>Stock</th>
                                 <th>Categoría</th>
                                 <th>Acciones</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody >
                             {productos?.map((producto) => (
                                 <tr key={producto.id}>
-                                    <td>{producto.nombre.slice(0, 15)}...</td>
-                                    <td>$ {Number(producto.precio).toFixed(0)}</td>
+                                    <td  className="py-5" >{producto.nombre.slice(0, 15)}...</td>
+                                    <td className='text-right'> {Number(producto.precio).toFixed(0)}</td>
                                     <td>{producto.stock}</td>
                                     <td>{producto.categoria?.nombre}</td>
-                                    <td className='acciones'>
-                                        <Button text='🟩' onClick={() => editProduto(producto)} />
-                                        <Button text='❌' onClick={() => deleteProducto(producto.id)} />
+                                    <td className='mt-5 flex justify-center gap-2'>
+                                        <button className='bg-blue-800 hover:bg-blue-700 p-1 rounded' onClick={() => editProduto(producto)}>
+                                            <Pencil/>
+                                        </button>
+                                        <button onClick={()=> deleteProducto(producto.id)} className=' rounded p-1 bg-[#B00020]/80 hover:bg-red-600 '>
+                                            <Trash/>
+                                        </button>
                                     </td>
                                 </tr>
                             ))}
                         </tbody>
                     </table>
                 </div>
-                <div className="flex flex-col items-center justify-between gap-4 border-t border-slate-200 bg-slate-50/70 px-4 py-3 sm:flex-row">
+                <div className="flex flex-col items-center justify-between pl-15 pr-20 pt-8 gap-3 border-slate-200 bg-slate-50/10 px-4 py-3 sm:flex-row rounded-b">
                     {/* Información de registros */}
                     <div className="text-xs text-slate-500">
-                        Mostrando <strong className="text-slate-800">{inicioRegistro}</strong> a <strong className="text-slate-800">{finRegistro}</strong> de <strong className="text-slate-800">{total}</strong> registros
                         {totalPaginas > 1 && (
                             <span> (Página <strong>{pagina}</strong> de <strong>{totalPaginas}</strong>)</span>
                         )}
@@ -181,15 +193,6 @@ function PanelAdmin() {
                             title="Primera página"
                         >
                             «
-                        </button>
-
-                        {/* Botón Anterior */}
-                        <button
-                            onClick={() => setPagina((prev) => Math.max(prev - 1, 1))}
-                            disabled={pagina === 1}
-                            className="inline-flex items-center gap-1 rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs font-medium text-slate-600 transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-40"
-                        >
-                            <span>Anterior</span>
                         </button>
 
                         {/* Números de página */}
@@ -215,15 +218,6 @@ function PanelAdmin() {
                                     );
                                 })}
                         </div>
-
-                        {/* Botón Siguiente */}
-                        <button
-                            onClick={() => setPagina((prev) => Math.min(prev + 1, totalPaginas))}
-                            disabled={pagina >= totalPaginas}
-                            className="inline-flex items-center gap-1 rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs font-medium text-slate-600 transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-40"
-                        >
-                            <span>Siguiente</span>
-                        </button>
 
                         {/* Botón Última Página */}
                         <button

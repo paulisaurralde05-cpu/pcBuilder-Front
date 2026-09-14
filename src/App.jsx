@@ -17,7 +17,7 @@ function App() {
       <ProductProvider>
           <Routes>
             {/* Rutas Privadas */}
-            <Route path="/admin" element={<PanelAdmin />} />
+            <Route path="/admin/panel" element={<PanelAdmin />} />
             <Route path="/admin/categories" element={<Categories />} />
             <Route path="/admin/login" element={<LoginAdmin />} />
             <Route path="/login" element={<Login />} />
