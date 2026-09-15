@@ -15,7 +15,7 @@ function Categories() {
     const [limite, setLimite] = useState(5)
     const [total, setTotal] = useState(0);
     const [totalPaginas, setTotalPaginas] = useState(1);
-
+    const [busqueda, setBusqueda] = useState('');
 
     const cargarCategorias = useCallback(async () => {
         try {
@@ -23,9 +23,9 @@ function Categories() {
                 pagina,
                 limite,
             }
-            // if (busqueda.trim() !== '') {
-            //     params.busqueda = busqueda.trim();
-            // }
+            if (busqueda.trim() !== '') {
+                params.busqueda = busqueda.trim();
+            }
             const respuesta = await buscarItems('categorias', params);
             if (respuesta && respuesta.categorias) {
                 setCategory(respuesta.categorias);
@@ -40,7 +40,16 @@ function Categories() {
         } catch (error) {
             console.error('Error al buscar categorias:', error);
         }
-    }, [pagina, limite]);
+    }, [pagina, limite, busqueda]);
+    const handleLimpiarBusqueda = () => {
+        setBusqueda('');
+        setPagina(1);
+    }
+    const handleBusquedaChange = (e) => {
+        setBusqueda(e.target.value);
+        setPagina(1);
+
+    }
 
     useEffect(() => {
         cargarCategorias();
@@ -79,8 +88,35 @@ function Categories() {
 
                 <div className='border-b border-gray-600 my-4'></div>
 
-                <h1 className='text-2xl text-white mb-3'>Categorías</h1>
-                <h2 className='text-lg text-gray-300 mb-20'>Gestiona tus Categorías</h2>
+                <h1 className='text-2xl text-white'>Categorías</h1>
+                <h2 className='text-lg text-gray-400 mb-4'>Gestiona tus Categorías</h2>
+
+                <div className="relative md:col-span-5">
+                    <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
+                        <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
+                    </div>
+                    <input
+                        type="text"
+                        value={busqueda}
+                        onChange={handleBusquedaChange}
+                        placeholder="Buscar por nombre, precio, categoría..."
+                        className="w-100 rounded-xl border border-slate-500 py-2 pl-9 pr-8 text-sm text-slate-900 placeholder-slate-400 focus:border-[#B00020]/30 focus:outline-none focus:ring-1 focus:ring-[#B00020]/30"
+                    />
+                    {busqueda && (
+                        <button
+                            onClick={handleLimpiarBusqueda}
+                            className="absolute inset-y-0 right-0 flex items-center pr-3 text-slate-400 hover:text-slate-600"
+                            title="Limpiar búsqueda"
+                        >
+                            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    )}
+                </div>
+
                 <button className='absolute right-10 top-30 bg-blue-800 text-white font-bold py-4 px-6 rounded-lg mb-4 flex items-center gap-2 hover:bg-blue-700 transition' onClick={createCategory}>
                     <Plus size={30} />
                     <span>Crear Categoría</span>

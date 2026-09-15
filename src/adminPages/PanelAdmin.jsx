@@ -105,7 +105,7 @@ function PanelAdmin() {
                 <div className='border-b border-gray-600 my-4'></div>
 
                 <h1 className='text-2xl text-white'>Productos</h1>
-                <h2 className='text-lg text-gray-300 mb-4'>Gestiona tus productos</h2>
+                <h2 className='text-lg text-gray-400 mb-4'>Gestiona tus productos</h2>
                 <div className="relative md:col-span-5">
                     <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
                         <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
