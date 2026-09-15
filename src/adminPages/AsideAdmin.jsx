@@ -11,7 +11,7 @@ function AsideAdmin({isOpen}) {
             <aside className={`fixed top-0 left-0 min-w-[16rem] h-screen bg-[#1E1F24] text-white p-4 ${isOpen ? 'block' : 'hidden'}`}>
                 <h2 className='text-2xl font-bold mt-6 mb-10'> Panel Admin</h2>
                 <nav className='flex flex-col gap-10 text-lg'>
-                    <NavLink to="/admin/panel" className={linkClass} >
+                    <NavLink to="/admin" className={linkClass} end >
                         Productos
                     </NavLink>
                     {/* <NavLink to="">Pedidos</NavLink> */}

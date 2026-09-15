@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import { UserProvider } from './context/UserProvider.jsx';
 import { ProductProvider } from './context/ProductProvider.jsx';
 import PanelAdmin from './adminPages/PanelAdmin.jsx';
@@ -15,21 +15,23 @@ function App() {
   return (
     <UserProvider>
       <ProductProvider>
-          <Routes>
-            {/* Rutas Privadas */}
-            <Route path="/admin/panel" element={<PanelAdmin />} />
-            <Route path="/admin/categories" element={<Categories />} />
-            <Route path="/admin/login" element={<LoginAdmin />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/registro" element={<Register />} />
+        <Routes>
+          {/* Rutas Privadas / Admin */}
+          <Route path="/admin" element={<PanelAdmin />} />
+          <Route path="/admin/categories" element={<Categories />} />
+          <Route path="/admin/login" element={<LoginAdmin />} />
 
-            {/* Rutas Públicas */}
-            <Route path="/home" element={<Home />} />
-            <Route path="/productos/:id" element={<ProductDetail />} />
-            <Route path="/nosotros" element={<Nosotros />} />
-            <Route path="/carrito" element={<Cart />} />
-            <Route path="*" element={<Login />} />
-          </Routes>
+          {/* Rutas Públicas */}
+          <Route path="/" element={<Navigate to="/home" replace />} />
+          <Route path="/home" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/registro" element={<Register />} />
+          <Route path="/productos/:id" element={<ProductDetail />} />
+          <Route path="/nosotros" element={<Nosotros />} />
+          <Route path="/carrito" element={<Cart />} />
+
+          <Route path="*" element={<Login />} />
+        </Routes>
       </ProductProvider>
     </UserProvider>
   );
