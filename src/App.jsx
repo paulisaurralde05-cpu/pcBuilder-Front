@@ -7,7 +7,7 @@ import LoginAdmin from "./adminPages/LoginAdmin.jsx";
 import Register from './components/Register';
 import Home from './pages/Home';
 import ProductDetail from './pages/ProductDetail.jsx';
-import Categories from './adminPages/categories.jsx';
+import Categories from './adminPages/Categories.jsx';
 import Nosotros from './pages/Nosotros.jsx';
 import Cart from './pages/Cart.jsx';
 
@@ -17,7 +17,7 @@ function App() {
       <ProductProvider>
           <Routes>
             {/* Rutas Privadas */}
-            <Route path="/admin" element={<PanelAdmin />} />
+            <Route path="/admin/panel" element={<PanelAdmin />} />
             <Route path="/admin/categories" element={<Categories />} />
             <Route path="/admin/login" element={<LoginAdmin />} />
             <Route path="/login" element={<Login />} />
