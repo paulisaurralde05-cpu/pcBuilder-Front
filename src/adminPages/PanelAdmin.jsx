@@ -116,8 +116,8 @@ function PanelAdmin() {
                         type="text"
                         value={busqueda}
                         onChange={handleBusquedaChange}
-                        placeholder="Buscar por nombre, apellido o email..."
-                        className="w-100 rounded-xl border border-slate-300 py-2 pl-9 pr-8 text-sm text-slate-900 placeholder-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                        placeholder="Buscar por nombre, precio, categoría..."
+                        className="w-100 rounded-xl border border-slate-500 py-2 pl-9 pr-8 text-sm text-slate-900 placeholder-slate-400 focus:border-[#B00020]/30 focus:outline-none focus:ring-1 focus:ring-[#B00020]/30"
                     />
                     {busqueda && (
                         <button
@@ -143,7 +143,7 @@ function PanelAdmin() {
                     // onGuardar={fetchProductos}
                     />
                 )}
-
+                {/* TABLA DE PRODUCTOS */}
                 <div className=' mt-8 bg-[#1E1F24] rounded-t overflow-hidden'>
                     <table className='w-full text-center text-sm text-gray-300 '>
                         <thead className='bg-[#B00020]/30  text-gray-100'>
@@ -159,8 +159,8 @@ function PanelAdmin() {
                             {productos?.map((producto) => (
                                 <tr key={producto.id}>
                                     <td  className="py-5" >{producto.nombre.slice(0, 15)}...</td>
-                                    <td className='text-right'> {Number(producto.precio).toFixed(0)}</td>
-                                    <td>{producto.stock}</td>
+                                    <td className='text-right  '> {Number(producto.precio).toFixed(0)}</td>
+                                    <td className='pl-20'>{producto.stock}</td>
                                     <td>{producto.categoria?.nombre}</td>
                                     <td className='mt-5 flex justify-center gap-2'>
                                         <button className='bg-blue-800 hover:bg-blue-700 p-1 rounded' onClick={() => editProduto(producto)}>

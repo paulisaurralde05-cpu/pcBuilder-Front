@@ -7,7 +7,7 @@ import LoginAdmin from "./adminPages/LoginAdmin.jsx";
 import Register from './components/Register';
 import Home from './pages/Home';
 import ProductDetail from './pages/ProductDetail.jsx';
-import Categories from './adminPages/categories.jsx';
+import Categories from './adminPages/Categories.jsx';
 import Nosotros from './pages/Nosotros.jsx';
 import Cart from './pages/Cart.jsx';
 
