@@ -149,8 +149,8 @@ function PanelAdmin() {
                         <thead className='bg-[#B00020]/30  text-gray-100'>
                             <tr>
                                 <th className='p-4'>Nombre</th>
-                                <th >Precio($)</th>
-                                <th>Stock</th>
+                                <th className='pr-8 text-right'>Precio($)</th>
+                                <th className='pr-8 text-right'>Stock</th>
                                 <th>Categoría</th>
                                 <th>Acciones</th>
                             </tr>
@@ -159,8 +159,8 @@ function PanelAdmin() {
                             {productos?.map((producto) => (
                                 <tr key={producto.id}>
                                     <td  className="py-5" >{producto.nombre.slice(0, 15)}...</td>
-                                    <td className='text-right  '> {Number(producto.precio).toFixed(0)}</td>
-                                    <td className='pl-20'>{producto.stock}</td>
+                                    <td className='w-10 pr-8 text-right'>{Number(producto.precio).toFixed(0)}</td>
+                                    <td className="w-32 text-right pr-8">{producto.stock}</td>
                                     <td>{producto.categoria?.nombre}</td>
                                     <td className='mt-5 flex justify-center gap-2'>
                                         <button className='bg-blue-800 hover:bg-blue-700 p-1 rounded' onClick={() => editProduto(producto)}>

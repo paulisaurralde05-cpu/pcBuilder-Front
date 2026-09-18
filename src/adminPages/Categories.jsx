@@ -101,7 +101,7 @@ function Categories() {
                         type="text"
                         value={busqueda}
                         onChange={handleBusquedaChange}
-                        placeholder="Buscar por nombre, precio, categoría..."
+                        placeholder="Buscar por nombre, descripción..."
                         className="w-100 rounded-xl border border-slate-500 py-2 pl-9 pr-8 text-sm text-slate-900 placeholder-slate-400 focus:border-[#B00020]/30 focus:outline-none focus:ring-1 focus:ring-[#B00020]/30"
                     />
                     {busqueda && (
@@ -129,16 +129,16 @@ function Categories() {
                         <thead className='bg-[#B00020]/30  text-gray-100'>
                             <tr>
                                 <th className='p-4'>Nombre</th>
-                                <th>Descripción</th>
+                                <th className=" text-left">Descripción</th>
                                 <th>Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
                             {category?.map((c) => (
                                 <tr key={c.id}>
-                                    <td className="py-5 px-5">{c.nombre.slice(0, 15)}</td>
-                                    <td>{c.descripcion}</td>
-                                    <td className='mt-5 flex justify-center gap-2'>
+                                    <td className="py-5">{c.nombre.slice(0, 15)}...</td>
+                                    <td className="w-60 text-left">{c.descripcion}</td>
+                                    <td className=' mt-5 flex justify-center gap-2'>
                                         <button className='bg-blue-800 hover:bg-blue-700 p-1 rounded' onClick={() => { editCategory(c) }}>
                                             <Pencil />
                                         </button>
