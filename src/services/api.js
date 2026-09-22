@@ -38,3 +38,4 @@ export const actualizarItem = (tipo, id, body) => api.put(`${tipo}/${id}`, body)
 export const eliminarItem = (tipo, id) => api.delete(`${tipo}/${id}`);
 
 export const buscarItems = (tipo, query) => api.get (`${tipo}/buscar`, { params: query})
+export const agregarItem = (body) => api.post(`carrito/agregar`, body)

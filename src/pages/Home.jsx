@@ -1,7 +1,7 @@
 import { useState, useContext, useMemo } from 'react';
 import Header from "../components/Header.jsx";
 import { ProductContext } from '../context/ProductContext.jsx';
-
+import { agregarItem } from '../services/api.js'
 export const Home = () => {
   const { productos = [], categorias = [] } = useContext(ProductContext) || {};
 
@@ -13,8 +13,8 @@ export const Home = () => {
   const productosFiltrados = useMemo(() => {
     return productos.filter((prod) => {
       const coincideBusqueda = prod.nombre.toLowerCase().includes(busqueda.toLowerCase());
-      
-      const coincideCategoria = categoriaSeleccionada === '' || 
+
+      const coincideCategoria = categoriaSeleccionada === '' ||
         String(prod.categoryId || prod.categoriaId || prod.categoria) === String(categoriaSeleccionada);
 
       return coincideBusqueda && coincideCategoria;
@@ -129,7 +129,7 @@ export const Home = () => {
                     <span className="text-base font-bold text-slate-900">
                       ${Number(prod.precio).toLocaleString()}
                     </span>
-                    <button className="rounded-lg bg-slate-600 px-3 py-1.5 text-xs border border-slate-600 font-semibold text-white transition hover:bg-slate-500 cursor-pointer">
+                    <button onClick={() => agregarItem({idProducto: prod.id, cantidad: 1})} className="rounded-lg bg-slate-600 px-3 py-1.5 text-xs border border-slate-600 font-semibold text-white transition hover:bg-slate-500 cursor-pointer">
                       Agregar
                     </button>
                   </div>
@@ -153,11 +153,10 @@ export const Home = () => {
               <button
                 key={numeroPagina}
                 onClick={() => setPaginaActual(numeroPagina)}
-                className={`px-3 py-1.5 rounded-lg text-xs font-semibold cursor-pointer ${
-                  paginaActual === numeroPagina
-                    ? 'bg-slate-700 text-white'
-                    : 'bg-white border border-slate-300 text-slate-700 hover:bg-slate-100'
-                }`}
+                className={`px-3 py-1.5 rounded-lg text-xs font-semibold cursor-pointer ${paginaActual === numeroPagina
+                  ? 'bg-slate-700 text-white'
+                  : 'bg-white border border-slate-300 text-slate-700 hover:bg-slate-100'
+                  }`}
               >
                 {numeroPagina}
               </button>

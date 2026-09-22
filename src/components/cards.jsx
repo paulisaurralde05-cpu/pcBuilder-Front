@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { obtenerItems } from '../services/api.js';
+import { obtenerItems, agregarItem } from '../services/api.js';
 import { Link } from 'react-router-dom';
 import img2 from '../assets/products/img2.jpg';
 import '../styles/user/cards.css';
@@ -29,7 +29,7 @@ function Cards() {
           <Link to={`/productos/${item.id}`} className="btn-ver">
             Ver más
           </Link>
-          <button className="btn-agregar">Agregar al carrito</button>
+          <button className="btn-agregar" onClick={()=> agregarItem({idProducto: item.id, cantidad: 1})}>Agregar al carrito</button>
 
         </div>
       ))}
