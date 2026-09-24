@@ -39,3 +39,6 @@ export const eliminarItem = (tipo, id) => api.delete(`${tipo}/${id}`);
 
 export const buscarItems = (tipo, query) => api.get (`${tipo}/buscar`, { params: query})
 export const agregarItem = (body) => api.post(`carrito/agregar`, body)
+export const obtenerCarrito = () => api.get('carrito/');
+export const agregarAlCarrito = (idProducto, cantidad = 1) => api.post('carrito/agregar', { idProducto, cantidad });
+export const eliminarDelCarrito = (idProducto) => api.delete(`carrito/eliminar/${idProducto}`);
