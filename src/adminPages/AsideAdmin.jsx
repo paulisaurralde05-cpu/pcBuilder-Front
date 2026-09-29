@@ -14,7 +14,6 @@ function AsideAdmin({isOpen}) {
                     <NavLink to="/admin" className={linkClass} end >
                         Productos
                     </NavLink>
-                    {/* <NavLink to="">Pedidos</NavLink> */}
                     <NavLink to="/admin/categories" className={linkClass} >
                         Categorias
                     </NavLink>

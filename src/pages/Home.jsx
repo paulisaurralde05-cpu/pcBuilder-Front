@@ -1,7 +1,8 @@
 import { useState, useContext, useMemo } from 'react';
+import { Link } from 'react-router-dom';
 import Header from "../components/Header.jsx";
 import { ProductContext } from '../context/ProductContext.jsx';
-import { agregarItem } from '../services/api.js'
+import { agregarItem } from '../services/api.js';
 
 export const Home = () => {
   const { productos = [], categorias = [] } = useContext(ProductContext) || {};
@@ -143,29 +144,33 @@ export const Home = () => {
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {productosPaginados.map((prod) => {
               const imagenUrl = prod.imagenes?.[0]?.url || prod.imagen || null;
+              const productoId = prod.id || prod._id;
 
               return (
                 <div
-                  key={prod.id || prod._id}
+                  key={productoId}
                   className="flex flex-col justify-between rounded-xl border border-slate-200 bg-white p-4 transition hover:border-slate-300 shadow-sm"
                 >
                   <div>
-                    <div className="mb-3 flex h-40 w-full items-center justify-center rounded-lg bg-slate-100 overflow-hidden">
-                      {imagenUrl ? (
-                        <img
-                          src={imagenUrl}
-                          alt={prod.nombre}
-                          className="h-full w-full object-cover"
-                        />
-                      ) : (
-                        <span className="text-xs text-slate-500">
-                          Sin Imagen
-                        </span>
-                      )}
-                    </div>
-                    <h4 className="font-semibold text-slate-800 text-sm">
-                      {prod.nombre}
-                    </h4>
+                    <Link to={`/productos/${productoId}`} className="block group">
+                      <div className="mb-3 flex h-40 w-full items-center justify-center rounded-lg bg-slate-100 overflow-hidden">
+                        {imagenUrl ? (
+                          <img
+                            src={imagenUrl}
+                            alt={prod.nombre}
+                            className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-300"
+                          />
+                        ) : (
+                          <span className="text-xs text-slate-500">
+                            Sin Imagen
+                          </span>
+                        )}
+                      </div>
+                      <h4 className="font-semibold text-slate-800 text-sm group-hover:text-slate-600 transition">
+                        {prod.nombre}
+                      </h4>
+                    </Link>
+
                     <p className="mt-1 line-clamp-2 text-xs text-slate-600">
                       {prod.descripcion || "Sin descripción."}
                     </p>
@@ -182,7 +187,7 @@ export const Home = () => {
                     </span>
                     <button
                       onClick={() =>
-                        agregarItem({ idProducto: prod.id, cantidad: 1 })
+                        agregarItem({ idProducto: productoId, cantidad: 1 })
                       }
                       className="rounded-lg bg-slate-600 px-3 py-1.5 text-xs border border-slate-600 font-semibold text-white transition hover:bg-slate-500 cursor-pointer"
                     >
