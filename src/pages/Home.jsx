@@ -2,6 +2,7 @@ import { useState, useContext, useMemo } from 'react';
 import Header from "../components/Header.jsx";
 import { ProductContext } from '../context/ProductContext.jsx';
 import { agregarItem } from '../services/api.js'
+
 export const Home = () => {
   const { productos = [], categorias = [] } = useContext(ProductContext) || {};
 
