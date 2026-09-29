@@ -62,6 +62,49 @@ export const Home = () => {
           </a>
         </div>
       </section>
+      
+      <section className="my-8 px-2">
+        <h2 className="text-2xl font-bold mb-4 text-white flex items-center gap-2">
+          <span>🔥</span> Productos Destacados
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {productos.slice(0, 3).map((producto, index) => {
+            
+            const imagenesReales = [
+              "https://images.unsplash.com/photo-1591799264318-7e6ef8ddb7ea?w=500&q=80", 
+              "https://www.comeros.com.ar/wp-content/uploads/2026/07/f7d3a024-e447-4bac-aeff-d7d3db01d7e3-1000x1000.webp", 
+              "https://images.unsplash.com/photo-1591488320449-011701bb6704?w=500&q=80"  
+            ];
+
+            const imagenUrl = producto.imagenes?.[0]?.url || imagenesReales[index % imagenesReales.length];
+
+            return (
+              <div key={producto.id || index} className="border border-slate-200 rounded-xl p-4 shadow-md bg-white flex flex-col justify-between">
+                <div>
+                  <div className="w-full h-40 bg-slate-100 rounded-lg overflow-hidden flex items-center justify-center mb-3">
+                    <img
+                      src={imagenUrl}
+                      alt={producto.nombre}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  
+                  <h3 className="font-bold text-slate-900 text-base leading-snug">
+                    {producto.nombre}
+                  </h3>
+                  
+                  <p className="text-emerald-600 font-extrabold text-lg mt-2">
+                    ${Number(producto.precio).toLocaleString()}
+                  </p>
+                </div>
+                <button className="mt-4 w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg transition shadow-sm cursor-pointer">
+                  Ver Detalle
+                </button>
+              </div>
+            );
+          })}
+        </div>
+      </section>
 
       <section id="catalogo" className="space-y-6">
         <div className="flex flex-col md:flex-row items-center justify-between gap-4 bg-white p-4 rounded-xl border border-slate-200">
@@ -172,11 +215,10 @@ export const Home = () => {
                 <button
                   key={numeroPagina}
                   onClick={() => setPaginaActual(numeroPagina)}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-semibold cursor-pointer ${
-                    paginaActual === numeroPagina
-                      ? "bg-slate-700 text-white"
-                      : "bg-white border border-slate-300 text-slate-700 hover:bg-slate-100"
-                  }`}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-semibold cursor-pointer ${paginaActual === numeroPagina
+                    ? "bg-slate-700 text-white"
+                    : "bg-white border border-slate-300 text-slate-700 hover:bg-slate-100"
+                    }`}
                 >
                   {numeroPagina}
                 </button>
