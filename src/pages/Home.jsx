@@ -39,15 +39,22 @@ export const Home = () => {
     <div className="space-y-8 text-slate-100 p-6 bg-slate-600 min-h-screen">
       <Header />
 
-      <section className="rounded-2xl bg-white p-8 border border-neutral-800">
-        <div className="max-w-md space-y-3">
-          <h2 className="text-2xl font-bold tracking-tight text-slate-800">
+      <section
+        className="relative overflow-hidden rounded-2xl bg-neutral-900 bg-cover bg-right border border-neutral-800 p-8"
+        style={{ backgroundImage: "url('/bannerr.jfif')" }}
+      >
+        <div className="absolute inset-0 bg-gradient-to-r from-neutral-950/80 via-neutral-900/30 to-transparent pointer-events-none" />
+
+        <div className="relative z-10 max-w-md space-y-3">
+          <h2 className="text-2xl font-bold tracking-tight text-white drop-shadow-md">
             Armá tu PC
           </h2>
-          <p className="text-xs text-slate-700">Componentes compatibles.</p>
+          <p className="text-sm text-neutral-200 drop-shadow">
+            Elegí componentes 100% compatibles y armala a tu medida.
+          </p>
           <a
             href="#catalogo"
-            className="inline-block rounded-lg bg-green-700 hover:bg-green-600 px-4 py-2 text-xs font-semibold text-white transition"
+            className="inline-block rounded-lg bg-slate-600 hover:bg-slate-500 px-5 py-2.5 text-xs font-semibold text-white transition shadow-md"
           >
             Ver Productos
           </a>
@@ -129,7 +136,12 @@ export const Home = () => {
                     <span className="text-base font-bold text-slate-900">
                       ${Number(prod.precio).toLocaleString()}
                     </span>
-                    <button onClick={() => agregarItem({idProducto: prod.id, cantidad: 1})} className="rounded-lg bg-slate-600 px-3 py-1.5 text-xs border border-slate-600 font-semibold text-white transition hover:bg-slate-500 cursor-pointer">
+                    <button
+                      onClick={() =>
+                        agregarItem({ idProducto: prod.id, cantidad: 1 })
+                      }
+                      className="rounded-lg bg-slate-600 px-3 py-1.5 text-xs border border-slate-600 font-semibold text-white transition hover:bg-slate-500 cursor-pointer"
+                    >
                       Agregar
                     </button>
                   </div>
@@ -149,21 +161,26 @@ export const Home = () => {
               Anterior
             </button>
 
-            {Array.from({ length: totalPaginas }, (_, i) => i + 1).map((numeroPagina) => (
-              <button
-                key={numeroPagina}
-                onClick={() => setPaginaActual(numeroPagina)}
-                className={`px-3 py-1.5 rounded-lg text-xs font-semibold cursor-pointer ${paginaActual === numeroPagina
-                  ? 'bg-slate-700 text-white'
-                  : 'bg-white border border-slate-300 text-slate-700 hover:bg-slate-100'
+            {Array.from({ length: totalPaginas }, (_, i) => i + 1).map(
+              (numeroPagina) => (
+                <button
+                  key={numeroPagina}
+                  onClick={() => setPaginaActual(numeroPagina)}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-semibold cursor-pointer ${
+                    paginaActual === numeroPagina
+                      ? "bg-slate-700 text-white"
+                      : "bg-white border border-slate-300 text-slate-700 hover:bg-slate-100"
                   }`}
-              >
-                {numeroPagina}
-              </button>
-            ))}
+                >
+                  {numeroPagina}
+                </button>
+              ),
+            )}
 
             <button
-              onClick={() => setPaginaActual((prev) => Math.min(prev + 1, totalPaginas))}
+              onClick={() =>
+                setPaginaActual((prev) => Math.min(prev + 1, totalPaginas))
+              }
               disabled={paginaActual === totalPaginas}
               className="px-3 py-1.5 rounded-lg border border-slate-300 bg-white text-slate-700 text-xs font-semibold disabled:opacity-50 disabled:cursor-not-allowed hover:bg-slate-100 cursor-pointer"
             >
