@@ -12,23 +12,30 @@ export const LoginAdmin = () => {
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
-        e.preventDefault();
-        setError('');
+    e.preventDefault();
+    setError('');
 
-        try {
-            const data = await loginAdmin(email, password);
+    try {
+        const data = await loginAdmin(email, password);
 
-            if (data && data.token) {
-                login(data.usuario || data.cliente, data.token);
-                navigate('/admin');
-            } else {
-                setError('No se recibió el token de autorización');
-            }
-        } catch (err) {
-            console.error('Error en login admin:', err);
-            setError(err.response?.data?.mensaje || err.message || 'Error al iniciar sesión como admin');
+        if (data && data.token) {
+            const adminData = {
+                ...(data.admin || data.administrador || {}),
+                role: 'admin'
+            };
+
+            localStorage.setItem('token', data.token);
+            localStorage.setItem('user', JSON.stringify(adminData));
+            login(adminData, data.token);
+            navigate('/admin');
+        } else {
+            setError('No se recibió el token de autorización');
         }
-    };
+    } catch (err) {
+        console.error('Error en login admin:', err);
+        setError(err.response?.data?.mensaje || err.message || 'Error al iniciar sesión como admin');
+    }
+};
 
     return (
         <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
