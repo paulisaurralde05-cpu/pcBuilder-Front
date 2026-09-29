@@ -1,10 +1,11 @@
 import { useState, useContext, useMemo } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Header from "../components/Header.jsx";
 import { ProductContext } from '../context/ProductContext.jsx';
 import { agregarItem } from '../services/api.js';
 
 export const Home = () => {
+  const navigate = useNavigate();
   const { productos = [], categorias = [] } = useContext(ProductContext) || {};
 
   const [busqueda, setBusqueda] = useState('');
@@ -62,18 +63,18 @@ export const Home = () => {
           </a>
         </div>
       </section>
-      
+
       <section className="my-8 px-2">
         <h2 className="text-2xl font-bold mb-4 text-white flex items-center gap-2">
           <span>🔥</span> Productos Destacados
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {productos.slice(0, 3).map((producto, index) => {
-            
+
             const imagenesReales = [
-              "https://images.unsplash.com/photo-1591799264318-7e6ef8ddb7ea?w=500&q=80", 
-              "https://www.comeros.com.ar/wp-content/uploads/2026/07/f7d3a024-e447-4bac-aeff-d7d3db01d7e3-1000x1000.webp", 
-              "https://images.unsplash.com/photo-1591488320449-011701bb6704?w=500&q=80"  
+              "https://images.unsplash.com/photo-1591799264318-7e6ef8ddb7ea?w=500&q=80",
+              "https://www.comeros.com.ar/wp-content/uploads/2026/07/f7d3a024-e447-4bac-aeff-d7d3db01d7e3-1000x1000.webp",
+              "https://images.unsplash.com/photo-1591488320449-011701bb6704?w=500&q=80"
             ];
 
             const imagenUrl = producto.imagenes?.[0]?.url || imagenesReales[index % imagenesReales.length];
@@ -88,23 +89,31 @@ export const Home = () => {
                       className="w-full h-full object-cover"
                     />
                   </div>
-                  
+
                   <h3 className="font-bold text-slate-900 text-base leading-snug">
                     {producto.nombre}
                   </h3>
-                  
+
                   <p className="text-emerald-600 font-extrabold text-lg mt-2">
                     ${Number(producto.precio).toLocaleString()}
                   </p>
                 </div>
-                <button className="mt-4 w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg transition shadow-sm cursor-pointer">
+                <button
+                  type="button"
+                  onClick={() => {
+                    const idValido = producto.id || producto.id_producto || producto._id;
+                    if (idValido) {
+                      navigate(`/productos/${idValido}`);
+                    }
+                  }}
+                  className="mt-4 w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg transition shadow-sm cursor-pointer" >
                   Ver Detalle
                 </button>
               </div>
             );
           })}
         </div>
-      </section>
+      </section >
 
       <section id="catalogo" className="space-y-6">
         <div className="flex flex-col md:flex-row items-center justify-between gap-4 bg-white p-4 rounded-xl border border-slate-200">
@@ -142,8 +151,23 @@ export const Home = () => {
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {productosPaginados.map((prod) => {
-              const imagenUrl = prod.imagenes?.[0]?.url || prod.imagen || null;
+            {productosPaginados.map((prod, index) => {
+              const mapaImagenes = {
+                "Procesador AMD Ryzen 3 4100": "https://images.unsplash.com/photo-1591799264318-7e6ef8ddb7ea?w=500&q=80",
+                "Intel Core i9-14900Kf": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQug8ueaDyOZ95OUf0rADnt1fGczgn0xbJSQ6mStcmTA9cz503FJci0rs8&s=10",
+                "Placa de Video ASUS RTX 4070 Dual 12GB": "https://images.unsplash.com/photo-1591488320449-011701bb6704?w=500&q=80",
+                "Procesador AMD Ryzen 5 5600X": "https://www.venex.com.ar/products_images/1755777303_6.jpg",
+                "Motherboard ASUS Prime B550M-A": "https://www.maximus.com.ar/Temp/App_WebSite/App_PictureFiles/Items/90MB1GC0-M0EAY0.jpg",
+                "Motherboard Gigabyte Z790 AORUS ELITE":"https://http2.mlstatic.com/D_NQ_NP_659758-MLU54963368222_042023-O.webp",
+                "Placa de Video AMD Radeon RX 7600 XT 16GB": "https://fullh4rd.com.ar/img/productos/3/placa-de-video-radeon-rx-7600-xt-16gb-asus-tuf-gaming--oc-3.jpg",
+                "Memoria RAM DDR5 16GB Corsair Vengeance":"https://fullh4rd.com.ar/img/productos/4/memoria-16gb-ddr5-5200-corsair-vengeance-expo-xmp-0.jpg",
+                "Disco SSD NVMe M.2 1TB WD Black SN770":"https://http2.mlstatic.com/D_Q_NP_2X_972472-MLA95934827361_102025-T.webp",
+                "Fuente Corsair RM750e 750W": "https://fullh4rd.com.ar/img/productos/26/fuente-750w-corsair-rm750e-80-plus-gold-bajo-ruido-fully-modular-0.jpg",
+                "Gabinete Lian Li Lancool 216 RGB": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQWTwZG3n_UZAMDKFao0iKpaoSm0KlxC9PWROycsn6VrnvxuIHmr2zFkk_L&s=10",
+                "Memoria RAM DDR4 32GB Kingston Fury":"https://fullh4rd.com.ar/img/productos/4/memoria-32gb-ddr4-3200-kingston-fury-beast-rgb-0.jpg",
+
+              };
+              const imagenUrl = prod.imagenes?.[0]?.url || prod.imagen || mapaImagenes[prod.nombre] || "https://images.unsplash.com/photo-1587202372775-e229f172b9d7?w=500&q=80";
               const productoId = prod.id || prod._id;
 
               return (
@@ -154,17 +178,13 @@ export const Home = () => {
                   <div>
                     <Link to={`/productos/${productoId}`} className="block group">
                       <div className="mb-3 flex h-40 w-full items-center justify-center rounded-lg bg-slate-100 overflow-hidden">
-                        {imagenUrl ? (
-                          <img
-                            src={imagenUrl}
-                            alt={prod.nombre}
-                            className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-300"
-                          />
-                        ) : (
-                          <span className="text-xs text-slate-500">
-                            Sin Imagen
-                          </span>
-                        )}
+
+                        <img
+                          src={imagenUrl}
+                          alt={prod.nombre}
+                          className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        />
+
                       </div>
                       <h4 className="font-semibold text-slate-800 text-sm group-hover:text-slate-600 transition">
                         {prod.nombre}
@@ -237,7 +257,7 @@ export const Home = () => {
           </div>
         )}
       </section>
-    </div>
+    </div >
   );
 };
 
