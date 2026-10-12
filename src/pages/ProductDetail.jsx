@@ -48,7 +48,7 @@ function ProductDetail() {
     setErrorStock('');
 
     if (cantidad > stockDisponibleReal) {
-      setErrorStock(`No podés agregar esa cantidad. Ya tenés ${cantidadEnCarrito} en el carrito y el stock total es ${product.stock}.`);
+      setErrorStock(`No se puede agregar esa cantidad. Hay ${cantidadEnCarrito} en el carrito y el stock total es ${product.stock}.`);
       return;
     }
 
