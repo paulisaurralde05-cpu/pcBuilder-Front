@@ -89,7 +89,7 @@ function Categories() {
         <div className='flex bg-[#070709] min-h-screen'>
             <AsideAdmin isOpen={isOpen} />
 
-            <div className={`${isOpen ? 'ml-[16rem]' : 'ml-0'} flex-1 p-8 transition-all duration-300`}>
+            <div className={`${isOpen ? 'ml-[18rem]' : 'ml-0'} flex-1 p-8 transition-all duration-300`}>
                 <div className='flex items-center justify-between'>
                     <button className="cursor-pointer text-white" onClick={() => setIsOpen(!isOpen)}>
                         <Menu size={30} />
