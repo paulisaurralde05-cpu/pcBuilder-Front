@@ -42,3 +42,11 @@ export const agregarItem = (body) => api.post(`carrito/agregar`, body)
 export const obtenerCarrito = () => api.get('carrito/');
 export const agregarAlCarrito = (idProducto, cantidad = 1) => api.post('carrito/agregar', { idProducto, cantidad });
 export const eliminarDelCarrito = (idProducto) => api.delete(`carrito/eliminar/${idProducto}`);
+
+export const actualizarEstadoPedido = async (id, estado) => {
+    const respuesta = await api.patch(`admin/pedidos/${id}/estado`, {
+        estado
+    });
+
+    return respuesta.data;
+};

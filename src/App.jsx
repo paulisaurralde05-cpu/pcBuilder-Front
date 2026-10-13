@@ -5,6 +5,7 @@ import AdminProtegido from './components/AdminProtegido.jsx';
 import PanelAdmin from './adminPages/PanelAdmin.jsx';
 import LoginAdmin from "./adminPages/LoginAdmin.jsx";
 import Categories from './adminPages/Categories.jsx';
+import Pedidos from './adminPages/Pedidos.jsx';
 import Login from './components/Login.jsx';
 import Register from './components/Register';
 import Home from './pages/Home';
@@ -24,6 +25,7 @@ function App() {
           <Route element={<AdminProtegido />}>
             <Route path="/admin" element={<PanelAdmin />} />
             <Route path="/admin/categories" element={<Categories />} />
+            <Route path="/admin/pedidos" element={<Pedidos />} />
           </Route>
 
           {/* Rutas Públicas */}
