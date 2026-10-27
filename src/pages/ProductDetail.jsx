@@ -1,6 +1,7 @@
 import { useParams, Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { obtenerItemsXid, agregarItem, obtenerItems } from '../services/api.js';
+import { useCart } from '../context/CartContext.jsx';
+import { obtenerItemsXid, agregarItem } from '../services/api.js';
 import Header from '../components/Header.jsx';
 
 function ProductDetail() {
@@ -9,28 +10,19 @@ function ProductDetail() {
   const [loading, setLoading] = useState(true);
   const [agregado, setAgregado] = useState(false);
   const [errorStock, setErrorStock] = useState('');
-  
+  const { carrito, fetchCarrito } = useCart();
   const [cantidad, setCantidad] = useState(1);
   const [cantidadEnCarrito, setCantidadEnCarrito] = useState(0);
+
   const cargarDatos = async () => {
     try {
       setLoading(true);
-      
       const data = await obtenerItemsXid('productos', id);
       const productoEncontrado = data?.producto || (Array.isArray(data) ? data[0] : data);
       setProduct(productoEncontrado);
 
-      const carritoData = await obtenerItems('carrito');
-      const itemsCarrito = Array.isArray(carritoData) ? carritoData : (carritoData?.items || []);
-      
-      const itemEnCarrito = itemsCarrito.find(
-        (item) => String(item.idProducto || item.productoId || item.id) === String(id)
-      );
-
-      setCantidadEnCarrito(itemEnCarrito ? itemEnCarrito.cantidad : 0);
-
     } catch (error) {
-      console.error('Error al obtener datos:', error);
+      console.error('Error al obtener datos del producto:', error);
     } finally {
       setLoading(false);
     }
@@ -41,6 +33,14 @@ function ProductDetail() {
       cargarDatos();
     }
   }, [id]);
+
+  useEffect(() => {
+    const itemsCarrito = carrito?.detalles || carrito?.items || [];
+    const itemEnCarrito = itemsCarrito.find(
+      (item) => String(item.idProducto || item.productoId || item.id) === String(id)
+    );
+    setCantidadEnCarrito(itemEnCarrito ? itemEnCarrito.cantidad : 0);
+  }, [carrito, id]);
 
   const stockDisponibleReal = product ? Math.max(0, product.stock - cantidadEnCarrito) : 0;
 
@@ -55,10 +55,9 @@ function ProductDetail() {
     try {
       const productoId = product.id || product._id || id;
       await agregarItem({ idProducto: productoId, cantidad });
+      await fetchCarrito();
 
-      setCantidadEnCarrito((prev) => prev + cantidad);
       setCantidad(1);
-
       setAgregado(true);
       setTimeout(() => setAgregado(false), 2000);
     } catch (error) {
@@ -195,7 +194,7 @@ function ProductDetail() {
                 {stockDisponibleReal <= 0 
                   ? 'Sin Stock disponible' 
                   : agregado 
-                    ? 'Agregado al carrito!' 
+                    ? '¡Agregado al carrito!' 
                     : 'Agregar al Carrito'
                 }
               </button>
