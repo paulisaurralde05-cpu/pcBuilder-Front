@@ -1,5 +1,5 @@
-import { useEffect } from 'react';
-import { agregarItem, eliminarItem } from '../services/api.js';
+import { useEffect, useState } from 'react';
+import { agregarItem, eliminarItem, confirmarPedido } from '../services/api.js';
 import Header from '../components/Header.jsx';
 import { useCart } from '../context/CartContext.jsx'; 
 import { Trash, ShoppingCart } from 'lucide-react';
@@ -7,9 +7,30 @@ import { Trash, ShoppingCart } from 'lucide-react';
 function Cart() {
 
   const { carrito, fetchCarrito } = useCart();
+  const [confirmandoPedido, setConfirmandoPedido] = useState(false);
+  const [mensajePedido, setMensajePedido] = useState('');
+  const [errorPedido, setErrorPedido] = useState('');
+
   useEffect(() => {
     fetchCarrito();
   }, []);
+
+  // controlador de pedido, hace el post, crea el pedido, vacía el carrito
+  const handleConfirmarPedido = async () => {
+    setConfirmandoPedido(true);
+    setMensajePedido('');
+    setErrorPedido('');
+
+    try {
+      await confirmarPedido();
+      setMensajePedido('Pedido confirmado correctamente.');
+      await fetchCarrito();
+    } catch (error) {
+      setErrorPedido(error.message || 'No se pudo confirmar el pedido.');
+    } finally {
+      setConfirmandoPedido(false);
+    }
+  };
 
   const handleModificarCantidad = async (idProducto, cambio, cantidadActual, stock) => {
     if (cambio > 0 && cantidadActual >= stock) {
@@ -206,8 +227,25 @@ function Cart() {
             </div>
           </div>
 
-          <button className="text-white font-bold text-center w-full p-4 bg-emerald-600 hover:bg-emerald-700 transition mt-4 rounded-xl cursor-pointer shadow-md">
-            Confirmar Pago
+          {mensajePedido && (
+            <p role="status" className="mt-4 text-center font-semibold text-emerald-900">
+              {mensajePedido}
+            </p>
+          )}
+
+          {errorPedido && (
+            <p role="alert" className="mt-4 text-center font-semibold text-red-900">
+              {errorPedido}
+            </p>
+          )}
+
+          <button
+            type="button"
+            onClick={handleConfirmarPedido}
+            disabled={confirmandoPedido || listaItems.length === 0}
+            className="text-white font-bold text-center w-full p-4 bg-emerald-600 hover:bg-emerald-700 transition mt-4 rounded-xl cursor-pointer shadow-md disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {confirmandoPedido ? 'Confirmando pedido...' : 'Confirmar Pedido'}
           </button>
         </div>
       </div>

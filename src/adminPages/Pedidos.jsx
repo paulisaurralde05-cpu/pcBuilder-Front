@@ -14,6 +14,7 @@ function Pedidos() {
     const [pedidoSeleccionado, setPedidoSeleccionado] = useState(null);
     const [nuevoEstado, setNuevoEstado] = useState('');
     const [actualizando, setActualizando] = useState(false);
+    const [mensajeExito, setMensajeExito] = useState('');
 
     const navigate = useNavigate();
     const { logout } = useContext(UserContext) || {};
@@ -82,6 +83,7 @@ function Pedidos() {
         setPedidoSeleccionado(pedido);
         setNuevoEstado(pedido.estado);
         setError('');
+        setMensajeExito('');
     };
 
     const cambiarEstado = async () => {
@@ -101,6 +103,8 @@ function Pedidos() {
                 pedidoSeleccionado.id,
                 nuevoEstado
             );
+
+            setMensajeExito('Pedido actualizado correctamente')
 
             setPedidos((pedidosActuales) =>
                 pedidosActuales.map((pedido) =>
@@ -241,6 +245,8 @@ function Pedidos() {
 
             {/* Modal de detalle: conserva los estilos anteriores */}
             {pedidoSeleccionado && (
+
+
                 <div
                     className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm"
                     onClick={() => {
@@ -345,7 +351,10 @@ function Pedidos() {
 
                             <select
                                 value={nuevoEstado}
-                                onChange={(e) => setNuevoEstado(e.target.value)}
+                                onChange={(e) => {
+                                    setNuevoEstado(e.target.value);
+                                    setMensajeExito('');
+                                }}
                                 disabled={actualizando}
                                 className="w-full rounded-lg border border-gray-600 bg-[#070709] p-2 text-white"
                             >
@@ -361,6 +370,12 @@ function Pedidos() {
                                     {error}
                                 </p>
                             )}
+
+                            {mensajeExito && (
+                                <p role="status" className="mt-2 text-sm text-green-400">
+                                    {mensajeExito}
+                                </p>
+                            )}  
 
                             <div className="mt-3 flex justify-end">
                                 <button

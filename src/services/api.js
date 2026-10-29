@@ -50,3 +50,5 @@ export const actualizarEstadoPedido = async (id, estado) => {
 
     return respuesta.data;
 };
+
+export const confirmarPedido = () => api.post('pedidos/crear');
