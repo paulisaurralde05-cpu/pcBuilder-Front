@@ -5,7 +5,7 @@ import Button from '../components/button.jsx';
 import Form from './Form.jsx';
 import AsideAdmin from './AsideAdmin.jsx';
 import { UserContext } from '../context/UserContext.jsx';
-import { Menu, Trash, Pencil, Plus, LogOut } from 'lucide-react';
+import { Menu, Trash, Pencil, Plus, LogOut, Star } from 'lucide-react';
 
 function PanelAdmin() {
     const [productos, setProductos] = useState([]);
@@ -73,6 +73,24 @@ function PanelAdmin() {
             console.error('Error al eliminar producto:', error);
         }
     };
+    //Función para activar/desactivar el PRODUCTODESTACADO
+    const toggleDestacado = async (producto) => {
+        try {
+            const token = localStorage.getItem('token');
+            await fetch(`http://localhost:3000/productos/${producto.id}/destacar`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ featured: !producto.featured })
+            });
+
+            await cargarProductos();
+        } catch (error) {
+            console.error('Error al destacar:', error);
+        }
+    };
 
     const handleLimpiarBusqueda = () => {
         setBusqueda('');
@@ -97,7 +115,7 @@ function PanelAdmin() {
                         <Menu size={30} />
                     </button>
 
-                    <button 
+                    <button
                         onClick={handleLogout}
                         className='bg-red-700 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg flex items-center gap-2 transition cursor-pointer text-sm'
                         title="Cerrar Sesión"
@@ -137,7 +155,7 @@ function PanelAdmin() {
                     )}
                 </div>
                 <button className='absolute right-10 top-30 bg-blue-800 text-white font-bold py-4 px-6 rounded-lg mb-4 flex items-center gap-2 hover:bg-blue-700 transition cursor-pointer' onClick={createProducto}>
-                    <Plus size={30}/> 
+                    <Plus size={30} />
                     <span>Crear Producto</span>
                 </button>
 
@@ -167,12 +185,22 @@ function PanelAdmin() {
                                     <td className='w-10 pr-8 text-right'>{Number(producto.precio).toFixed(0)}</td>
                                     <td className="w-32 text-right pr-8">{producto.stock}</td>
                                     <td>{producto.categoria?.nombre}</td>
+
                                     <td className='mt-5 flex justify-center gap-2'>
-                                        <button className='bg-blue-800 hover:bg-blue-700 p-1 rounded cursor-pointer' onClick={() => editProduto(producto)}>
-                                            <Pencil/>
+                                        {/* BOTON DESTACARPRODUCTOS */}
+                                        <button
+                                            onClick={() => toggleDestacado(producto)}
+                                            className={`p-1 rounded cursor-pointer ${producto.featured ? 'bg-yellow-600 text-white' : 'bg-gray-600 text-gray-300'}`}
+                                            title="Destacar"
+                                        >
+                                            <Star fill={producto.featured ? "currentColor" : "none"} />
                                         </button>
-                                        <button onClick={()=> deleteProducto(producto.id)} className='rounded p-1 bg-[#B00020]/80 hover:bg-red-600 cursor-pointer'>
-                                            <Trash/>
+
+                                        <button className='bg-blue-800 hover:bg-blue-700 p-1 rounded cursor-pointer' onClick={() => editProduto(producto)}>
+                                            <Pencil />
+                                        </button>
+                                        <button onClick={() => deleteProducto(producto.id)} className='rounded p-1 bg-[#B00020]/80 hover:bg-red-600 cursor-pointer'>
+                                            <Trash />
                                         </button>
                                     </td>
                                 </tr>
