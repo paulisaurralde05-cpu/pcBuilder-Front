@@ -16,3 +16,13 @@ export const loginAdmin = async (email, password) => {
     const response = await axios.post(`${API_URL}/admin/login`, { email, password });
     return response.data;
 };
+
+export const solicitarRecuperacion = async (email) => {
+    const response = await axios.post(`${API_URL}/solicitar-recuperacion`, { email });
+    return response.data;
+};
+
+export const restablecerPassword = async (datos) => {
+    const response = await axios.post(`${API_URL}/restablecer-password`, datos);
+    return response.data;
+};
