@@ -21,7 +21,7 @@ function Header() {
   };
 
   return (
-    <header className="flex items-center justify-between rounded-xl bg-white px-6 py-4 border border-slate-700">
+    <header className="flex items-center sticky top-0 justify-between rounded-xl bg-white px-6 py-4 border border-slate-700">
       <h1 className="text-lg font-medium text-slate-700">
         Hola, <span className="font-bold text-slate-800">{user?.nombre || 'Usuario'}</span>
       </h1>

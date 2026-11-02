@@ -15,6 +15,10 @@ export const Home = () => {
   const [paginaActual, setPaginaActual] = useState(1);
   const itemsPorPagina = 9;
 
+  const productosDestacados = useMemo(() => {
+    return productos.filter(prod => prod.featured === true).slice(0, 3);
+  }, [productos]); //Productos destacados.
+
   const productosFiltrados = useMemo(() => {
     return productos.filter((prod) => {
       const coincideBusqueda = prod.nombre.toLowerCase().includes(busqueda.toLowerCase());
@@ -76,54 +80,58 @@ export const Home = () => {
       </section>
 
       {/* SECCIÓN PRODUCTOS DESTACADOS */}
-      <section className="my-8 px-2">
-        <h2 className="text-2xl font-bold mb-4 text-white flex items-center gap-2">
-          <span>🔥</span> Productos Destacados
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {productos.slice(0, 3).map((producto, index) => {
-            const imagenesReales = [
-              "https://images.unsplash.com/photo-1591799264318-7e6ef8ddb7ea?w=500&q=80",
-              "https://www.comeros.com.ar/wp-content/uploads/2026/07/f7d3a024-e447-4bac-aeff-d7d3db01d7e3-1000x1000.webp",
-              "https://images.unsplash.com/photo-1591488320449-011701bb6704?w=500&q=80"
-            ];
+      {productosDestacados.length > 0 && (
+        <section className="my-8 px-2">
+          <h2 className="text-2xl font-bold mb-4 text-white flex items-center gap-2">
+            <span>🔥</span> Productos Destacados
+          </h2>
 
-            const imagenUrl = producto.imagenes?.[0]?.url || producto.imagen || imagenesReales[index % imagenesReales.length];
-            const idValido = producto.id || producto.id_producto || producto._id;
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
 
-            return (
-              <div key={idValido || index} className="border border-slate-200 rounded-xl p-4 shadow-md bg-white flex flex-col justify-between">
-                <div>
-                  <div className="w-full h-40 bg-slate-100 rounded-lg overflow-hidden flex items-center justify-center mb-3">
-                    <img
-                      src={imagenUrl}
-                      alt={producto.nombre}
-                      className="w-full h-full object-cover"
-                    />
+            {productosDestacados.map((producto, index) => {
+              const imagenesReales = [
+                "https://images.unsplash.com/photo-1591799264318-7e6ef8ddb7ea?w=500&q=80",
+                "https://www.comeros.com.ar/wp-content/uploads/2026/07/f7d3a024-e447-4bac-aeff-d7d3db01d7e3-1000x1000.webp",
+                "https://images.unsplash.com/photo-1591488320449-011701bb6704?w=500&q=80"
+              ];
+
+              const imagenUrl = producto.imagenes?.[0]?.url || producto.imagen || imagenesReales[index % imagenesReales.length];
+              const idValido = producto.id || producto.id_producto || producto._id;
+
+              return (
+                <div key={idValido || index} className="border border-slate-200 rounded-xl p-4 shadow-md bg-white flex flex-col justify-between">
+                  <div>
+                    <div className="w-full h-40 bg-slate-100 rounded-lg overflow-hidden flex items-center justify-center mb-3">
+                      <img
+                        src={imagenUrl}
+                        alt={producto.nombre}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+
+                    <h3 className="font-bold text-slate-900 text-base leading-snug">
+                      {producto.nombre}
+                    </h3>
+
+                    <p className="text-emerald-600 font-extrabold text-lg mt-2">
+                      ${Number(producto.precio).toLocaleString('es-AR')}
+                    </p>
                   </div>
-
-                  <h3 className="font-bold text-slate-900 text-base leading-snug">
-                    {producto.nombre}
-                  </h3>
-
-                  <p className="text-emerald-600 font-extrabold text-lg mt-2">
-                    ${Number(producto.precio).toLocaleString('es-AR')}
-                  </p>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (idValido) navigate(`/productos/${idValido}`);
+                    }}
+                    className="mt-4 w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg transition shadow-sm cursor-pointer"
+                  >
+                    Ver Detalle
+                  </button>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => {
-                    if (idValido) navigate(`/productos/${idValido}`);
-                  }}
-                  className="mt-4 w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg transition shadow-sm cursor-pointer"
-                >
-                  Ver Detalle
-                </button>
-              </div>
-            );
-          })}
-        </div>
-      </section>
+              );
+            })}
+          </div>
+        </section>
+      )}
 
       {/* CATÁLOGO GENERAL */}
       <section id="catalogo" className="space-y-6">
@@ -204,7 +212,7 @@ export const Home = () => {
                     <span className="text-base font-bold text-slate-900">
                       ${Number(prod.precio).toLocaleString('es-AR')}
                     </span>
-                    
+
                     <div className="flex gap-2">
                       <button
                         type="button"
@@ -244,11 +252,10 @@ export const Home = () => {
                 <button
                   key={numeroPagina}
                   onClick={() => setPaginaActual(numeroPagina)}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-semibold cursor-pointer ${
-                    paginaActual === numeroPagina
-                      ? "bg-slate-700 text-white"
-                      : "bg-white border border-slate-300 text-slate-700 hover:bg-slate-100"
-                  }`}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-semibold cursor-pointer ${paginaActual === numeroPagina
+                    ? "bg-slate-700 text-white"
+                    : "bg-white border border-slate-300 text-slate-700 hover:bg-slate-100"
+                    }`}
                 >
                   {numeroPagina}
                 </button>

@@ -13,6 +13,7 @@ import Home from './pages/Home';
 import ProductDetail from './pages/ProductDetail.jsx';
 import Nosotros from './pages/Nosotros.jsx';
 import Cart from './pages/Cart.jsx';
+import RecuperarPassword from './components/RecuperarPassword.jsx';
 
 function App() {
   return (
@@ -41,6 +42,7 @@ function App() {
           <Route path="/" element={<Navigate to="/home" replace />} />
           <Route path="/login" element={<Login />} />
           <Route path="/registro" element={<Register />} />
+          <Route path="/recuperar-password" element={<RecuperarPassword />} />
 
           {/* Redirección por defecto */}
           <Route path="*" element={<Login />} />
