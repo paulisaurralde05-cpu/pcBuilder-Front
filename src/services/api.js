@@ -31,7 +31,7 @@ api.interceptors.response.use(
 );
 
 
-export const obtenerItems = (tipo) => api.get(`${tipo}/`);
+export const obtenerItems = (tipo, query) => api.get(`${tipo}/`, { params: query });
 export const obtenerItemsXid = (tipo, id) => api.get(`${tipo}/${id}`);
 export const crearItem = (tipo, body) => api.post(`${tipo}/`, body);
 export const actualizarItem = (tipo, id, body) => api.put(`${tipo}/${id}`, body);
