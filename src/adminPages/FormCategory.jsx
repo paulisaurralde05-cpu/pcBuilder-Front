@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import {crearItem, actualizarItem, } from '../services/api.js'
-function FormCategory({ category, onCancelar }) {
+import { crearItem, actualizarItem, } from '../services/api.js'
+
+// Recibe dos props:
+// - category: Si es null, estamos creando. Si tiene datos, estamos editando.
+// - onCancelar: Función para cerrar el modal.
+
+function FormCategory({ category, onCancelar, onGuardar }) {
 
     const [formulario, setFormulario] = useState({
         nombre: '',
@@ -37,11 +42,12 @@ function FormCategory({ category, onCancelar }) {
             } else {
                 await crearItem('categorias', datos);
             }
+            if (onGuardar) onGuardar();
 
             onCancelar();
 
         } catch (error) {
-            console.error('Error al guardar categoría:', error);
+            alert('Error al guardar categoría:', error);
         }
     };
 
@@ -67,6 +73,7 @@ function FormCategory({ category, onCancelar }) {
                     </div>
 
                     <div className="form-group">
+                        {/* Usamos textarea porque la descripción puede ser más larga */}
                         <textarea
                             name="descripcion"
                             value={formulario.descripcion}

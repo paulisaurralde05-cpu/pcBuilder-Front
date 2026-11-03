@@ -9,6 +9,7 @@ import { Menu, Trash, Pencil, Plus, LogOut } from 'lucide-react';
 
 function Categories() {
     const [category, setCategory] = useState([]);
+
     const [mostrarForm, setMostrarForm] = useState(false);
     const [categorySeleccionada, setcategorySeleccionada] = useState(null);
     const [isOpen, setIsOpen] = useState(true);
@@ -21,6 +22,7 @@ function Categories() {
     const navigate = useNavigate();
     const { logout } = useContext(UserContext) || {};
 
+    // Función para cerrar sesión: limpia el token y te manda al login.
     const handleLogout = () => {
         localStorage.removeItem('token');
         localStorage.removeItem('user');
@@ -28,21 +30,31 @@ function Categories() {
         navigate('/admin/login', { replace: true });
     };
 
+    // useCallback memoriza la función para que no se recree en cada renderizado.
+    // Solo se va a volver a crear si cambian 'pagina', 'limite' o 'busqueda'.
     const cargarCategorias = useCallback(async () => {
         try {
             const params = {
                 pagina,
                 limite,
             };
+
+            // Si el usuario escribió algo en el buscador, lo agregamos a los parámetros.
             if (busqueda.trim() !== '') {
                 params.busqueda = busqueda.trim();
             }
+
+            // Llamamos a la API. Como estamos en el controlador de categorías, buscamos 'categorias'.
             const respuesta = await buscarItems('categorias', params);
+
+            // Adaptamos la respuesta según cómo devuelva los datos el backend.
             if (respuesta && respuesta.categorias) {
                 setCategory(respuesta.categorias);
                 setTotal(respuesta.total || 0);
                 setTotalPaginas(respuesta.totalPaginas || 1);
             } else if (Array.isArray(respuesta)) {
+
+                // Fallback por si el backend devuelve un array directo.
                 setCategory(respuesta);
                 setTotal(respuesta.length);
                 setTotalPaginas(1);
@@ -62,20 +74,24 @@ function Categories() {
         setPagina(1);
     };
 
+    // Cada vez que cambia 'cargarCategorias' (porque cambió la página o la búsqueda), se ejecuta.
     useEffect(() => {
         cargarCategorias();
     }, [cargarCategorias]);
 
+    // Abre el formulario en modo "Crear" (sin datos iniciales).
     const createCategory = () => {
         setcategorySeleccionada(null);
         setMostrarForm(true);
     };
 
+    // Abre el formulario en modo "Editar" pasándole la categoría seleccionada.
     const editCategory = (category) => {
         setcategorySeleccionada(category);
         setMostrarForm(true);
     };
 
+    // Elimina una categoría y recarga la lista para que desaparezca de la tabla.
     const deleteCategory = async (id) => {
         try {
             await eliminarItem('categorias', id);
@@ -95,7 +111,7 @@ function Categories() {
                         <Menu size={30} />
                     </button>
 
-                    <button 
+                    <button
                         onClick={handleLogout}
                         className='bg-red-700 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg flex items-center gap-2 transition cursor-pointer text-sm'
                         title="Cerrar Sesión"
@@ -142,9 +158,9 @@ function Categories() {
                 </button>
 
                 {mostrarForm && (
-                    <FormCategory 
-                        category={categorySeleccionada} 
-                        onCancelar={() => setMostrarForm(false)} 
+                    <FormCategory
+                        category={categorySeleccionada}
+                        onCancelar={() => setMostrarForm(false)}
                         onGuardar={cargarCategorias}
                     />
                 )}
@@ -159,8 +175,12 @@ function Categories() {
                             </tr>
                         </thead>
                         <tbody>
+                            {/* Recorremos el array de categorías */}
                             {category?.map((c) => (
+
                                 <tr key={c.id}>
+                                    {/* .slice(0, 15) corta el texto si es muy largo para que no rompa el diseño */}
+
                                     <td className="py-5">{c.nombre?.slice(0, 15)}...</td>
                                     <td className="w-60 text-left">{c.descripcion}</td>
                                     <td className='mt-5 flex justify-center gap-2'>
