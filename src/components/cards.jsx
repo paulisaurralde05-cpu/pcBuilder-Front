@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { obtenerItems, agregarItem } from '../services/api.js';
 import { Link } from 'react-router-dom';
-
+import { getImagenUrl } from '../utils/helpers.js';
 
 function Cards() {
   const [items, setItems] = useState([]);
@@ -24,6 +24,7 @@ function Cards() {
       {items?.map((item) => (
         <div key={item.id} className="card">
           <Link to={`/productos/${item.id}`}>
+            <img src={getImagenUrl(item.imagen)} alt={item.nombre} />
             <h3>{item.nombre}</h3>
           </Link>
 

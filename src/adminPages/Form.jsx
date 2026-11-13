@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from 'react';
 import { obtenerItems, crearItem, actualizarItem } from '../services/api.js';
 import "../styles/admin/form.css"
@@ -14,6 +13,8 @@ function Form({ producto, onCancelar, onGuardar }) {
         idCategoria: ''
     });
 
+    // estado que almacena el archivo de imagen seleccionado. 
+    const [imagen, setImagen] = useState(null);
     const [categorias, setCategorias] = useState([]);
 
     useEffect(() => {
@@ -25,9 +26,10 @@ function Form({ producto, onCancelar, onGuardar }) {
             especificacionesTecnicas: producto?.especificacionesTecnicas || '',
             idCategoria: producto?.idCategoria || ''
         });
+        setImagen(null); // reiniciar estado al cambiar de producto. 
     }, [producto]);
 
-    // Traer categorías
+    // Traer categorías. 
     useEffect(() => {
         const fetchCategorias = async () => {
             try {
@@ -49,21 +51,34 @@ function Form({ producto, onCancelar, onGuardar }) {
         });
     };
 
+    // capturar la selección de la imagen. 
+    const handleFileChange = (e) => { 
+        if (e.target.files && e.target.files) { 
+            setImagen(e.target.files); 
+        } 
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         try {
-            const datos = {
-                ...formulario,
-                precio: Number(formulario.precio),
-                stock: Number(formulario.stock),
-                idCategoria: Number(formulario.idCategoria)
-            };
+            // crear FormData para enviar campos de texto y archivo binario 
+            const formData = new FormData(); 
+            formData.append('nombre', formulario.nombre); 
+            formData.append('precio', formulario.precio); 
+            formData.append('descripcion', formulario.descripcion); 
+            formData.append('stock', formulario.stock); 
+            formData.append('especificacionesTecnicas', formulario.especificacionesTecnicas); 
+            formData.append('idCategoria', formulario.idCategoria); // Si el usuario seleccionó un archivo nuevo, lo adjuntamos 
+            
+            if (imagen) { 
+                formData.append('imagen', imagen); 
+            }
 
             if (producto) {
-                await actualizarItem('productos', producto.id, datos);
+                await actualizarItem('productos', producto.id, formData);
             } else {
-                await crearItem('productos', datos);
+                await crearItem('productos', formData);
             }
 
             if (onGuardar) onGuardar();
@@ -151,6 +166,19 @@ function Form({ producto, onCancelar, onGuardar }) {
                                 </option>
                             ))}
                         </select>
+                    </div>
+
+                    {/* Campo de imagen para Multer */} 
+                    <div className="form-group">
+                        <label style={{display:'block', marginBottom: '5px', fontSize: '14px'}}>
+                            Imagen del producto:
+                        </label>
+                        <input 
+                        type="file"
+                        name="imagen"
+                        accept="image/*"
+                        onChange={handleFileChange}
+                        />
                     </div>
 
                     <div className='form-actions'>

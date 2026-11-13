@@ -4,6 +4,7 @@ import Header from "../components/Header.jsx";
 import { ProductContext } from '../context/ProductContext.jsx';
 import { useCart } from '../context/CartContext.jsx';
 import { agregarItem } from '../services/api.js';
+import { getImagenUrl } from '../utils/helpers.js';
 
 export const Home = () => {
   const navigate = useNavigate();
@@ -95,7 +96,8 @@ export const Home = () => {
                 "https://images.unsplash.com/photo-1591488320449-011701bb6704?w=500&q=80"
               ];
 
-              const imagenUrl = producto.imagenes?.[0]?.url || producto.imagen || imagenesReales[index % imagenesReales.length];
+              const imagenOrigen = producto.imagen || producto.imagenes?.[0]?.url || imagenesReales[index % imagenesReales.length];
+              const imagenUrl = getImagenUrl(imagenOrigen); 
               const idValido = producto.id || producto.id_producto || producto._id;
 
               return (
@@ -176,7 +178,10 @@ export const Home = () => {
                 "Intel Core i9-14900Kf": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQug8ueaDyOZ95OUf0rADnt1fGczgn0xbJSQ6mStcmTA9cz503FJci0rs8&s=10",
                 "Placa de Video ASUS RTX 4070 Dual 12GB": "https://images.unsplash.com/photo-1591488320449-011701bb6704?w=500&q=80",
               };
-              const imagenUrl = prod.imagenes?.[0]?.url || prod.imagen || mapaImagenes[prod.nombre] || "https://images.unsplash.com/photo-1587202372775-e229f172b9d7?w=500&q=80";
+
+              // traemos la ruta. 
+              const imagenOrigen = prod.imagen || prod.imagenes?.[0]?.url || mapaImagenes[prod.nombre] || "https://images.unsplash.com/photo-1587202372775-e229f172b9d7?w=500&amp;q=80"; 
+              const imagenUrl = getImagenUrl(imagenOrigen); 
               const productoId = prod.id || prod._id;
 
               return (
