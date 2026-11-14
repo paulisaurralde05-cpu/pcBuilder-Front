@@ -1,0 +1,7 @@
+@reference '../index.css';
+.header{
+    @apply  bg-gray-800 text-white py-4 px-6 flex items-center justify-between mb-10;
+}
+ul{
+    @apply flex space-x-4;
+}
