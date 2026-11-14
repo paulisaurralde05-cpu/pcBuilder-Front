@@ -3,6 +3,7 @@ import { agregarItem, eliminarItem, confirmarPedido } from '../services/api.js';
 import Header from '../components/Header.jsx';
 import { useCart } from '../context/CartContext.jsx'; 
 import { Trash, ShoppingCart } from 'lucide-react';
+import { getImagenUrl } from '../utils/helpers.js';
 
 function Cart() {
 
@@ -101,7 +102,7 @@ function Cart() {
                     >
                       {/* Imagen */}
                       <img
-                        src={item.producto.imagen}
+                        src={getImagenUrl(item.producto.imagen)}
                         width={80}
                         className="rounded object-cover h-16 w-20"
                         alt={item.producto.nombre}

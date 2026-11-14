@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { useCart } from '../context/CartContext.jsx';
 import { obtenerItemsXid, agregarItem } from '../services/api.js';
 import Header from '../components/Header.jsx';
+import { getImagenUrl } from '../utils/helpers.js';
 
 function ProductDetail() {
   const { id } = useParams();
@@ -110,7 +111,7 @@ function ProductDetail() {
           <div className="flex items-center justify-center bg-slate-50 border border-slate-200 rounded-xl p-6 min-h-[300px]">
             {product.imagen || product.imagenes?.[0]?.url ? (
               <img 
-                src={product.imagen || product.imagenes?.[0]?.url} 
+                src={getImagenUrl(product.imagen) || product.imagenes?.[0]?.url} 
                 alt={product.nombre} 
                 className="max-h-80 object-contain rounded-lg"
               />

@@ -1,18 +1,10 @@
-
 import { useEffect, useState } from 'react';
 import { obtenerItems, crearItem, actualizarItem } from '../services/api.js';
 import "../styles/admin/form.css"
 
-// Recibe tres props desde PanelAdmin.jsx:
-// - producto: Si es null, estamos creando. Si tiene datos, estamos editando.
-// - onCancelar: Función para cerrar el modal.
-// - onGuardar: Función para recargar la tabla después de guardar.
 function Form({ producto, onCancelar, onGuardar }) {
 
-    // Estado del formulario: Un solo objeto para manejar todos los inputs.
-    // Arranca vacío por defecto.
     const [formulario, setFormulario] = useState({
-
         nombre: '',
         precio: '',
         descripcion: '',
@@ -21,11 +13,10 @@ function Form({ producto, onCancelar, onGuardar }) {
         idCategoria: ''
     });
 
-    // Guarda la lista de categorías que traemos de la base de datos para el <select>.
+    const [imagen, setImagen] = useState(null);
     const [categorias, setCategorias] = useState([]);
 
-    // EFECTO 1 Si nos pasan un 'producto' (o sea, estamos editando),
-    // llenamos el formulario con sus datos. Si es null, se queda vacío.
+    // EFECTO 1: Llenar el formulario si estamos editando y reiniciar la imagen
     useEffect(() => {
         setFormulario({
             nombre: producto?.nombre || '',
@@ -35,60 +26,63 @@ function Form({ producto, onCancelar, onGuardar }) {
             especificacionesTecnicas: producto?.especificacionesTecnicas || '',
             idCategoria: producto?.idCategoria || ''
         });
-    }, [producto]); // Se vuelve a ejecutar si el producto cambia.
+        setImagen(null); // IMPORTANTE: Limpia la imagen seleccionada al cambiar de producto
+    }, [producto]);
 
-    // EFECTO 2 Se ejecuta UNA SOLA VEZ al abrir el formulario.
-    // Pide las categorías a la API para poder llenar el desplegable (select).
+    // EFECTO 2: Traer las categorías al montar el componente
     useEffect(() => {
         const fetchCategorias = async () => {
             try {
                 const data = await obtenerItems('categorias');
-
                 setCategorias(data);
             } catch (error) {
                 console.error('Error al obtener categorías:', error);
             }
         };
-
         fetchCategorias();
-    }, []); // El array vacío significa "solo al montar el componente".
+    }, []);
 
-    // Maneja lo que el usuario escribe en CUALQUIER input.
     const handleChange = (e) => {
         const { name, value } = e.target;
-        // [name] es una "propiedad computada".
-        // Permite usar el valor de la variable 'name' como el nombre de la propiedad.
-        // Así evitamos hacer un handleChange para cada input.
-
         setFormulario({
-            ...formulario, // Copiamos todo lo que ya estaba escrito.
-            [name]: value // Sobrescribimos solo el campo que se modificó.
+            ...formulario,
+            [name]: value
         });
     };
 
+    // CORREGIDO: Extraer el archivo del array de archivos
+    const handleFileChange = (e) => {
+        if (e.target.files && e.target.files.length > 0) {
+            setImagen(e.target.files[0]); // Tomamos SOLO el primer archivo
+        }
+    };
+
     const handleSubmit = async (e) => {
-        // Evita que la página se recargue cuando apretás "Guardar".
         e.preventDefault();
 
         try {
-            // Convertimos los strings a números donde corresponde, porque el input
-            // type="number" devuelve strings.
-            const datos = {
-                ...formulario,
-                precio: Number(formulario.precio),
-                stock: Number(formulario.stock),
-                idCategoria: Number(formulario.idCategoria)
-            };
+            // Creamos el FormData para enviar campos de texto + archivo binario
+            const formData = new FormData();
+            formData.append('nombre', formulario.nombre);
+            formData.append('precio', formulario.precio);
+            formData.append('descripcion', formulario.descripcion);
+            formData.append('stock', formulario.stock);
+            formData.append('especificacionesTecnicas', formulario.especificacionesTecnicas);
+            formData.append('idCategoria', formulario.idCategoria);
 
-            // Si hay 'producto', significa que estamos editando -> Hacemos PUT.
-            if (producto) {
-                await actualizarItem('productos', producto.id, datos);
-            } else {
-                // Si no hay producto, estamos creando -> Hacemos POST.
-                await crearItem('productos', datos);
+            if (imagen) {
+                formData.append('imagen', imagen);
             }
 
-            // Si todo sale bien, recargamos la tabla en el PanelAdmin y cerramos el modal.
+            // CORREGIDO: Solo se envía UNA VEZ (con FormData)
+            if (producto) {
+                // Editando -> PUT
+                await actualizarItem('productos', producto.id, formData);
+            } else {
+                // Creando -> POST
+                await crearItem('productos', formData);
+            }
+
             if (onGuardar) onGuardar();
             onCancelar();
 
@@ -101,91 +95,60 @@ function Form({ producto, onCancelar, onGuardar }) {
         <div className="modal-overlay">
             <div className="modal">
                 <div className="modal-header">
-                    {/* Operador ternario para cambiar el título según el modo */}
                     <h2>{producto ? 'Editar Producto' : 'Crear Producto'}</h2>
                 </div>
 
                 <button className='modal-close' onClick={onCancelar}>X</button>
 
                 <form onSubmit={handleSubmit} className="formulario-producto">
-                    {/* Acá van los inputs. Todos están "controlados" por React 
-                        porque tienen value={formulario.x} y onChange={handleChange} */}
-
                     <div className='form-group'>
-                        <input
-                            type="text"
-                            name="nombre" // 'name' DEBE coincidir con la propiedad del estado.
-                            value={formulario.nombre}
-                            onChange={handleChange}
-                            placeholder="Nombre"
-                        />
-                    </div>
-                    {/* ... (precio, descripcion, stock, especificaciones) ... */}
-
-                    <div className="form-group">
-                        <input
-                            type="number"
-                            name="precio"
-                            value={formulario.precio}
-                            onChange={handleChange}
-                            placeholder="Precio"
-                        />
+                        <input type="text" name="nombre" value={formulario.nombre} onChange={handleChange} placeholder="Nombre" />
                     </div>
 
                     <div className="form-group">
-                        <textarea
-                            name="descripcion"
-                            value={formulario.descripcion}
-                            onChange={handleChange}
-                            placeholder="Descripción"
-                        />
+                        <input type="number" name="precio" value={formulario.precio} onChange={handleChange} placeholder="Precio" />
                     </div>
 
                     <div className="form-group">
-                        <input
-                            type="number"
-                            name="stock"
-                            value={formulario.stock}
-                            onChange={handleChange}
-                            placeholder="Stock"
-                        />
+                        <textarea name="descripcion" value={formulario.descripcion} onChange={handleChange} placeholder="Descripción" />
                     </div>
 
                     <div className="form-group">
-                        <input
-                            type="text"
-                            name="especificacionesTecnicas"
-                            value={formulario.especificacionesTecnicas}
-                            onChange={handleChange}
-                            placeholder="Especificaciones Técnicas"
-                        />
+                        <input type="number" name="stock" value={formulario.stock} onChange={handleChange} placeholder="Stock" />
                     </div>
 
                     <div className="form-group">
-                        <select
-                            name="idCategoria"
-                            value={formulario.idCategoria}
-                            onChange={handleChange}
-                        >
+                        <input type="text" name="especificacionesTecnicas" value={formulario.especificacionesTecnicas} onChange={handleChange} placeholder="Especificaciones Técnicas" />
+                    </div>
+
+                    <div className="form-group">
+                        <select name="idCategoria" value={formulario.idCategoria} onChange={handleChange}>
                             <option value=""> Seleccionar categoría </option>
-                            {/* Recorremos el estado de categorías para generar un <option> por cada una */}
-
                             {categorias.map((categoria) => (
-                                <option
-                                    key={categoria.id}
-                                    value={categoria.id}
-                                >
+                                <option key={categoria.id} value={categoria.id}>
                                     {categoria.nombre}
                                 </option>
                             ))}
                         </select>
                     </div>
 
+                    {/* Campo de imagen para Multer */}
+                    <div className="form-group">
+                        <label style={{ display: 'block', marginBottom: '5px', fontSize: '14px' }}>
+                            Imagen del producto:
+                        </label>
+                        <input
+                            type="file"
+                            name="imagen"
+                            accept="image/*"
+                            onChange={handleFileChange}
+                        />
+                    </div>
+
                     <div className='form-actions'>
                         <button className='btn-cancelar' type="button" onClick={onCancelar}>
                             Cancelar
                         </button>
-
                         <button className='btn-guardar' type="submit">
                             {producto ? 'Actualizar Producto' : 'Crear Producto'}
                         </button>
