@@ -106,23 +106,24 @@ function PanelAdmin() {
   const finRegistro = Math.min(pagina * limite, total);
 
   return (
-    <div className="flex bg-[#070709] min-h-screen">
+    <div className="flex bg-slate-950 min-h-screen text-slate-300">
       <AsideAdmin isOpen={isOpen} />
 
       <div
         className={`${isOpen ? "ml-[18rem]" : "ml-0"} flex-1 p-8 transition-all duration-300`}
       >
-        <div className="flex items-center justify-between">
+        {/* BARRA SUPERIOR */}
+        <div className="flex items-center justify-between mb-4">
           <button
-            className="cursor-pointer text-white"
+            className="cursor-pointer text-slate-300 hover:text-white transition-colors bg-slate-900 p-2 rounded-lg border border-slate-800 shadow-sm"
             onClick={() => setIsOpen(!isOpen)}
           >
-            <Menu size={30} />
+            <Menu size={24} />
           </button>
 
           <button
             onClick={handleLogout}
-            className="bg-red-700 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg flex items-center gap-2 transition cursor-pointer text-sm"
+            className="bg-slate-900 border border-slate-800 text-slate-300 hover:bg-red-500/10 hover:text-red-400 hover:border-red-500/50 font-medium py-2 px-4 rounded-lg flex items-center gap-2 transition cursor-pointer text-sm shadow-sm"
             title="Cerrar Sesión"
           >
             <LogOut size={18} />
@@ -130,39 +131,15 @@ function PanelAdmin() {
           </button>
         </div>
 
-        <div className="border-b border-gray-600 my-4"></div>
+        <div className="border-b border-slate-800 my-4"></div>
 
-        <h1 className="text-2xl text-white">Productos</h1>
-        <h2 className="text-lg text-gray-400 mb-4">Gestiona tus productos</h2>
-        <div className="relative md:col-span-5">
-          <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
-            <svg
-              className="h-4 w-4"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-              />
-            </svg>
-          </div>
-          <input
-            type="text"
-            value={busqueda}
-            onChange={handleBusquedaChange}
-            placeholder="Buscar por nombre, precio, categoría..."
-            className="w-100 rounded-xl border border-slate-500 py-2 pl-9 pr-8 text-sm text-slate-100 placeholder-slate-400 focus:border-[#B00020]/30 focus:outline-none focus:ring-1 focus:ring-[#B00020]/30 bg-transparent"
-          />
-          {busqueda && (
-            <button
-              onClick={handleLimpiarBusqueda}
-              className="absolute inset-y-0 right-0 flex items-center pr-3 text-slate-400 hover:text-slate-200"
-              title="Limpiar búsqueda"
-            >
+        <h1 className="text-2xl text-white font-bold">Productos</h1>
+        <h2 className="text-sm text-slate-400 mb-6">Gestiona tus productos</h2>
+
+        {/* BUSCADOR Y BOTÓN CREAR */}
+        <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6">
+          <div className="relative w-full sm:w-80">
+            <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-slate-500">
               <svg
                 className="h-4 w-4"
                 fill="none"
@@ -173,19 +150,48 @@ function PanelAdmin() {
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
+                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
                 />
               </svg>
-            </button>
-          )}
+            </div>
+            <input
+              type="text"
+              value={busqueda}
+              onChange={handleBusquedaChange}
+              placeholder="Buscar productos..."
+              className="w-full rounded-lg border border-slate-700 py-2 pl-9 pr-8 text-sm text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 bg-slate-900 shadow-sm"
+            />
+            {busqueda && (
+              <button
+                onClick={handleLimpiarBusqueda}
+                className="absolute inset-y-0 right-0 flex items-center pr-3 text-slate-400 hover:text-white"
+                title="Limpiar búsqueda"
+              >
+                <svg
+                  className="h-4 w-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+            )}
+          </div>
+
+          <button
+            className="w-full sm:w-auto bg-blue-600 text-white font-medium py-2.5 px-5 rounded-lg flex items-center justify-center gap-2 hover:bg-blue-500 transition cursor-pointer shadow-md shadow-blue-900/50"
+            onClick={createProducto}
+          >
+            <Plus size={18} />
+            <span>Crear Producto</span>
+          </button>
         </div>
-        <button
-          className="absolute right-10 top-30 bg-blue-800 text-white font-bold py-4 px-6 rounded-lg mb-4 flex items-center gap-2 hover:bg-blue-700 transition cursor-pointer"
-          onClick={createProducto}
-        >
-          <Plus size={30} />
-          <span>Crear Producto</span>
-        </button>
 
         {mostrarForm && (
           <Form
@@ -195,58 +201,70 @@ function PanelAdmin() {
           />
         )}
 
-        <div className=" mt-8 bg-[#1E1F24] rounded-t overflow-hidden">
-          <table className="w-full text-center text-sm text-gray-300 ">
-            <thead className="bg-[#B00020]/30 text-gray-100">
+        {/* TABLA DE PRODUCTOS */}
+        <div className="mt-4 bg-slate-900 rounded-xl border border-slate-800 shadow-sm overflow-hidden">
+          <table className="w-full text-sm text-slate-300">
+            {/* Cabecera oscura que combina con el resto del panel */}
+            <thead className="bg-slate-950 text-slate-100 uppercase text-xs tracking-wider font-bold border-b border-slate-800">
               <tr>
-                <th className="p-4">Imagen</th>
-                <th className="p-4">Nombre</th>
-                <th className="pr-8 text-right">Precio($)</th>
-                <th className="pr-8 text-right">Stock</th>
-                <th>Categoría</th>
-                <th>Acciones</th>
+                <th className="px-6 py-4 text-center">Imagen</th>
+                <th className="px-6 py-4 text-left">Nombre</th>
+                <th className="px-6 py-4 text-right">Precio($)</th>
+                <th className="px-6 py-4 text-right">Stock</th>
+                <th className="px-6 py-4 text-left">Categoría</th>
+                <th className="px-6 py-4 text-center">Acciones</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="divide-y divide-slate-800/50">
               {productos?.map((producto) => (
-                <tr key={producto.id}>
-                  <td className="py-2 px-4 flex justify-center">
+                <tr key={producto.id} className="hover:bg-slate-800/50 transition-colors">
+                  <td className="py-3 px-6 flex justify-center">
                     <img
                       src={getImagenUrl(producto.imagenes?.[0]?.url)}
                       alt={producto.nombre}
-                      className="w-10 h-10 object-cover rounded bg-slate-800"
+                      className="w-10 h-10 object-cover rounded-md border border-slate-700 bg-slate-800"
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = "https://ui-avatars.com/api/?name=PC&background=1e293b&color=94a3b8";
+                      }}
                     />
                   </td>
-                  <td className="py-5">{producto.nombre?.slice(0, 15)}...</td>
-                  <td className="w-10 pr-8 text-right">
-                    {Number(producto.precio).toFixed(0)}
+                  <td className="px-6 py-3 font-medium text-white">
+                    {producto.nombre?.slice(0, 20)}...
                   </td>
-                  <td className="w-32 text-right pr-8">{producto.stock}</td>
-                  <td>{producto.categoria?.nombre}</td>
+                  <td className="px-6 py-3 text-right">
+                    ${Number(producto.precio).toFixed(0)}
+                  </td>
+                  <td className="px-6 py-3 text-right">{producto.stock}</td>
+                  <td className="px-6 py-3 text-slate-400">{producto.categoria?.nombre}</td>
 
-                  <td className="mt-5 flex justify-center gap-2">
-                    {/* BOTON DESTACAR PRODUCTOS */}
+                  <td className="px-6 py-3 flex justify-center gap-2">
+                    {/* BOTONES DE ACCIÓN ESTILO GHOST (Se iluminan al pasar el mouse) */}
                     <button
                       onClick={() => toggleDestacado(producto)}
-                      className={`p-1 rounded cursor-pointer ${producto.featured ? "bg-yellow-600 text-white" : "bg-gray-600 text-gray-300"}`}
+                      className={`p-2 rounded-lg transition-colors cursor-pointer ${producto.featured
+                        ? "text-amber-400 bg-amber-400/10"
+                        : "text-slate-500 hover:text-amber-400 hover:bg-amber-400/10"
+                        }`}
                       title="Destacar"
                     >
-                      <Star
-                        fill={producto.featured ? "currentColor" : "none"}
-                      />
+                      <Star size={18} fill={producto.featured ? "currentColor" : "none"} />
                     </button>
 
                     <button
-                      className="bg-blue-800 hover:bg-blue-700 p-1 rounded cursor-pointer"
+                      className="p-2 rounded-lg text-slate-500 hover:text-blue-400 hover:bg-blue-400/10 transition-colors cursor-pointer"
                       onClick={() => editProduto(producto)}
+                      title="Editar"
                     >
-                      <Pencil />
+                      <Pencil size={18} />
                     </button>
+
                     <button
                       onClick={() => deleteProducto(producto.id)}
-                      className="rounded p-1 bg-[#B00020]/80 hover:bg-red-600 cursor-pointer"
+                      className="p-2 rounded-lg text-slate-500 hover:text-red-400 hover:bg-red-400/10 transition-colors cursor-pointer"
+                      title="Eliminar"
                     >
-                      <Trash />
+                      <Trash size={18} />
                     </button>
                   </td>
                 </tr>
@@ -255,13 +273,13 @@ function PanelAdmin() {
           </table>
         </div>
 
-        <div className="flex flex-col items-center justify-between pl-15 pr-20 pt-8 gap-3 border-slate-200 bg-slate-50/10 px-4 py-3 sm:flex-row rounded-b">
-          <div className="text-xs text-slate-400">
+        {/* PAGINACIÓN */}
+        <div className="flex flex-col items-center justify-between pt-6 gap-3 sm:flex-row">
+          <div className="text-xs text-slate-500">
             {totalPaginas > 1 && (
               <span>
-                {" "}
-                (Página <strong>{pagina}</strong> de{" "}
-                <strong>{totalPaginas}</strong>)
+                Mostrando página <strong>{pagina}</strong> de{" "}
+                <strong>{totalPaginas}</strong>
               </span>
             )}
           </div>
@@ -270,7 +288,7 @@ function PanelAdmin() {
             <button
               onClick={() => setPagina(1)}
               disabled={pagina === 1}
-              className="rounded-lg border border-slate-700 bg-slate-800 px-2.5 py-1.5 text-xs font-medium text-slate-300 transition hover:bg-slate-700 disabled:cursor-not-allowed disabled:opacity-40"
+              className="rounded-lg border border-slate-700 bg-slate-900 px-3 py-1.5 text-xs font-medium text-slate-300 transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50"
               title="Primera página"
             >
               «
@@ -288,13 +306,13 @@ function PanelAdmin() {
                   return (
                     <div key={p} className="flex items-center gap-1">
                       {esPuntitos && (
-                        <span className="px-1 text-slate-400">...</span>
+                        <span className="px-1 text-slate-500">...</span>
                       )}
                       <button
                         onClick={() => setPagina(p)}
                         className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition cursor-pointer ${pagina === p
-                            ? "bg-blue-800 text-white shadow-sm"
-                            : "border border-slate-700 bg-slate-800 text-slate-300 hover:bg-slate-700"
+                          ? "bg-blue-600 text-white shadow-sm"
+                          : "border border-slate-700 bg-slate-900 text-slate-300 hover:bg-slate-800"
                           }`}
                       >
                         {p}
@@ -307,7 +325,7 @@ function PanelAdmin() {
             <button
               onClick={() => setPagina(totalPaginas)}
               disabled={pagina >= totalPaginas}
-              className="rounded-lg border border-slate-700 bg-slate-800 px-2.5 py-1.5 text-xs font-medium text-slate-300 transition hover:bg-slate-700 disabled:cursor-not-allowed disabled:opacity-40"
+              className="rounded-lg border border-slate-700 bg-slate-900 px-3 py-1.5 text-xs font-medium text-slate-300 transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50"
               title="Última página"
             >
               »

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { agregarItem, eliminarItem, confirmarPedido } from '../services/api.js';
 import Header from '../components/Header.jsx';
-import { useCart } from '../context/CartContext.jsx'; 
+import { useCart } from '../context/CartContext.jsx';
 import { Trash, ShoppingCart } from 'lucide-react';
 import { getImagenUrl } from '../utils/helpers.js';
 
@@ -57,11 +57,15 @@ function Cart() {
 
   const listaItems = carrito?.detalles || carrito?.items || [];
 
-  const totalProductos = listaItems.reduce((acc, item) => acc + item.cantidad, 0);
-  const totalPrecio = listaItems.reduce(
-    (acc, item) => acc + Number(item.producto.precio) * item.cantidad,
-    0
-  );
+  // Sumamos cantidades asegurando que sean números
+  const totalProductos = listaItems.reduce((acc, item) => acc + (Number(item.cantidad) || 0), 0);
+
+  // Calculamos el total validando que el producto exista para no romper con NaN
+  const totalPrecio = listaItems.reduce((acc, item) => {
+    const precio = Number(item.producto?.precio) || 0;
+    const cantidad = Number(item.cantidad) || 0;
+    return acc + (precio * cantidad);
+  }, 0);
 
   return (
     <div className="p-6 bg-slate-600 min-h-screen">
@@ -90,9 +94,9 @@ function Cart() {
                 </p>
               ) : (
                 listaItems.map((item) => {
-                  const stockMax = item.producto.stock;
+                  const stockMax = item.producto?.stock || 0;
                   const alcanzoLimite = item.cantidad >= stockMax;
-                  const precioUnitario = Number(item.producto.precio);
+                  const precioUnitario = Number(item.producto?.precio) || 0;
                   const subtotalProducto = precioUnitario * item.cantidad;
 
                   return (
@@ -102,12 +106,11 @@ function Cart() {
                     >
                       {/* Imagen */}
                       <img
-                        src={getImagenUrl(item.producto.imagen)}
+                        src={getImagenUrl(item.producto?.imagenes?.[0]?.url || item.producto?.imagen)}
                         width={80}
                         className="rounded object-cover h-16 w-20"
-                        alt={item.producto.nombre}
+                        alt={item.producto?.nombre || 'Producto'}
                       />
-
                       {/* Nombre y detalles */}
                       <div>
                         <h3 className="truncate font-semibold text-slate-900 text-sm">
@@ -149,11 +152,10 @@ function Cart() {
                           <button
                             type="button"
                             disabled={alcanzoLimite}
-                            className={`font-bold px-1 ${
-                              alcanzoLimite
-                                ? 'text-gray-300 cursor-not-allowed'
-                                : 'hover:cursor-pointer text-slate-700 hover:text-green-600'
-                            }`}
+                            className={`font-bold px-1 ${alcanzoLimite
+                              ? 'text-gray-300 cursor-not-allowed'
+                              : 'hover:cursor-pointer text-slate-700 hover:text-green-600'
+                              }`}
                             aria-label="Aumentar cantidad"
                             onClick={() =>
                               handleModificarCantidad(

@@ -83,8 +83,8 @@ function ProductDetail() {
         <Header />
         <div className="flex flex-col items-center justify-center h-[calc(100vh-80px)] gap-4">
           <p className="text-xl font-semibold">Producto no encontrado</p>
-          <Link 
-            to="/home" 
+          <Link
+            to="/home"
             className="px-4 py-2 bg-slate-700 hover:bg-slate-600 rounded-lg text-sm transition"
           >
             Volver al catálogo
@@ -99,20 +99,20 @@ function ProductDetail() {
       <Header />
 
       <main className="flex-1 max-w-6xl w-full mx-auto p-6 md:p-10">
-        <Link 
-          to="/home" 
+        <Link
+          to="/home"
           className="inline-flex items-center gap-2 text-slate-300 hover:text-white mb-6 transition text-sm font-medium"
         >
           <span>← Volver al inicio</span>
         </Link>
 
         <div className="bg-white text-slate-800 rounded-2xl p-6 md:p-8 grid grid-cols-1 md:grid-cols-2 gap-8 shadow-xl">
-          
+
           <div className="flex items-center justify-center bg-slate-50 border border-slate-200 rounded-xl p-6 min-h-[300px]">
             {product.imagen || product.imagenes?.[0]?.url ? (
-              <img 
-                src={getImagenUrl(product.imagen) || product.imagenes?.[0]?.url} 
-                alt={product.nombre} 
+              <img
+                src={getImagenUrl(product.imagenes?.[0]?.url || product.imagen)}
+                alt={product.nombre}
                 className="max-h-80 object-contain rounded-lg"
               />
             ) : (
@@ -165,7 +165,7 @@ function ProductDetail() {
               {stockDisponibleReal > 0 && (
                 <div className="flex items-center gap-3 mb-4">
                   <label className="text-xs font-semibold text-slate-600">Cantidad:</label>
-                  <input 
+                  <input
                     type="number"
                     min="1"
                     max={stockDisponibleReal}
@@ -186,16 +186,15 @@ function ProductDetail() {
               <button
                 onClick={handleAgregar}
                 disabled={stockDisponibleReal <= 0}
-                className={`w-full py-3.5 px-6 font-bold rounded-xl transition cursor-pointer shadow-md ${
-                  agregado 
-                    ? 'bg-emerald-600 text-white' 
+                className={`w-full py-3.5 px-6 font-bold rounded-xl transition cursor-pointer shadow-md ${agregado
+                    ? 'bg-emerald-600 text-white'
                     : 'bg-slate-800 hover:bg-slate-700 disabled:bg-slate-300 disabled:cursor-not-allowed text-white'
-                }`}
+                  }`}
               >
-                {stockDisponibleReal <= 0 
-                  ? 'Sin Stock disponible' 
-                  : agregado 
-                    ? '¡Agregado al carrito!' 
+                {stockDisponibleReal <= 0
+                  ? 'Sin Stock disponible'
+                  : agregado
+                    ? '¡Agregado al carrito!'
                     : 'Agregar al Carrito'
                 }
               </button>
