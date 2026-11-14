@@ -160,21 +160,23 @@ function Pedidos() {
     };
 
     return (
-        <div className="flex min-h-screen bg-[#070709]">
+        <div className="flex min-h-screen bg-slate-950 text-slate-300">
             <AsideAdmin isOpen={isOpen} />
 
             <main className={`${isOpen ? 'ml-[18rem]' : 'ml-0'} flex-1 p-8 transition-all duration-300`}>
-                <div className="flex items-center justify-between">
+
+                {/* BARRA SUPERIOR */}
+                <div className="flex items-center justify-between mb-4">
                     <button
-                        className="cursor-pointer text-white"
+                        className="cursor-pointer text-slate-300 hover:text-white transition-colors bg-slate-900 p-2 rounded-lg border border-slate-800 shadow-sm"
                         onClick={() => setIsOpen(!isOpen)}
                     >
-                        <Menu size={30} />
+                        <Menu size={24} />
                     </button>
 
                     <button
                         onClick={handleLogout}
-                        className="flex cursor-pointer items-center gap-2 rounded-lg bg-red-700 px-4 py-2 text-sm font-semibold text-white transition hover:bg-red-600"
+                        className="bg-slate-900 border border-slate-800 text-slate-300 hover:bg-red-500/10 hover:text-red-400 hover:border-red-500/50 font-medium py-2 px-4 rounded-lg flex items-center gap-2 transition cursor-pointer text-sm shadow-sm"
                         title="Cerrar Sesión"
                     >
                         <LogOut size={18} />
@@ -182,113 +184,102 @@ function Pedidos() {
                     </button>
                 </div>
 
-                <div className="my-4 border-b border-gray-600" />
+                <div className="border-b border-slate-800 my-4" />
 
-                <h1 className="text-2xl text-white">Pedidos</h1>
-                <h2 className="mb-4 text-lg text-gray-400">Gestiona los pedidos</h2>
+                <h1 className="text-2xl text-white font-bold">Pedidos</h1>
+                <h2 className="text-sm text-slate-400 mb-6">Gestiona los pedidos</h2>
 
-                {/* busqueda */}
-                <div className="relative md:col-span-5">
-                    <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
-                        <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                        </svg>
-                    </div>
-                    <input
-                        type="text"
-                        value={busqueda}
-                        onChange={handleBusquedaChange}
-                        placeholder="Buscar por nombre, precio, categoría..."
-                        className="w-100 rounded-xl border border-slate-500 py-2 pl-9 pr-8 text-sm text-slate-100 placeholder-slate-400 focus:border-[#B00020]/30 focus:outline-none focus:ring-1 focus:ring-[#B00020]/30 bg-transparent"
-                    />
-                    {busqueda && (
-                        <button
-                            onClick={handleLimpiarBusqueda}
-                            className="absolute inset-y-0 right-0 flex items-center pr-3 text-slate-400 hover:text-slate-200"
-                            title="Limpiar búsqueda"
-                        >
+                {/* BUSCADOR (Alineado igual que en Categorías) */}
+                <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6">
+                    <div className="relative w-full sm:w-80">
+                        <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-slate-500">
                             <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                             </svg>
-                        </button>
-                    )}
+                        </div>
+                        <input
+                            type="text"
+                            value={busqueda}
+                            onChange={handleBusquedaChange}
+                            placeholder="Buscar por cliente, estado..."
+                            className="w-full rounded-lg border border-slate-700 py-2 pl-9 pr-8 text-sm text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 bg-slate-900 shadow-sm"
+                        />
+                        {busqueda && (
+                            <button
+                                onClick={handleLimpiarBusqueda}
+                                className="absolute inset-y-0 right-0 flex items-center pr-3 text-slate-400 hover:text-white"
+                                title="Limpiar búsqueda"
+                            >
+                                <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
+                        )}
+                    </div>
                 </div>
 
                 {error && !pedidoSeleccionado && (
-                    <div
-                        role="alert"
-                        className="mb-4 rounded-lg border border-red-700 bg-red-950/50 p-4 text-red-200"
-                    >
+                    <div role="alert" className="mb-4 rounded-lg border border-red-500/50 bg-red-500/10 p-4 text-red-400">
                         {error}
-                        <button
-                            onClick={cargarPedidos}
-                            className="ml-3 font-semibold underline"
-                        >
+                        <button onClick={cargarPedidos} className="ml-3 font-semibold underline">
                             Reintentar
                         </button>
                     </div>
                 )}
 
-                <div className="mt-8 overflow-x-auto rounded-t bg-[#1E1F24]">
-                    <table className="w-full text-center text-sm text-gray-300">
-                        <thead className="bg-[#B00020]/30 text-gray-100">
+                {/* TABLA DE PEDIDOS (Bordes y Cabecera idénticos a Categorías) */}
+                <div className="mt-4 bg-slate-900 rounded-xl border border-slate-800 shadow-sm overflow-hidden">
+                    <table className="w-full text-sm text-slate-300">
+                        <thead className="bg-slate-950 text-slate-100 uppercase text-xs tracking-wider font-bold border-b border-slate-800">
                             <tr>
-                                <th className="p-4">Pedido</th>
-                                <th>Cliente</th>
-                                <th>Fecha</th>
-                                <th>Total</th>
-                                <th>Estado</th>
-                                <th>Detalle</th>
+                                <th className="px-6 py-4 text-left">Pedido</th>
+                                <th className="px-6 py-4 text-left">Cliente</th>
+                                <th className="px-6 py-4 text-left">Fecha</th>
+                                <th className="px-6 py-4 text-right">Total</th>
+                                <th className="px-6 py-4 text-center">Estado</th>
+                                <th className="px-6 py-4 text-center">Detalle</th>
                             </tr>
                         </thead>
 
-                        <tbody>
+                        <tbody className="divide-y divide-slate-800/50">
                             {cargando ? (
                                 <tr>
-                                    <td className="py-8 text-gray-400" colSpan="6">
-                                        Cargando pedidos...
-                                    </td>
+                                    <td className="py-8 text-slate-500 text-center" colSpan="6">Cargando pedidos...</td>
                                 </tr>
                             ) : pedidos.length === 0 ? (
                                 <tr>
-                                    <td className="py-8 text-gray-400" colSpan="6">
-                                        No hay pedidos para mostrar
-                                    </td>
+                                    <td className="py-8 text-slate-500 text-center" colSpan="6">No hay pedidos para mostrar</td>
                                 </tr>
                             ) : pedidos.map((pedido) => (
-                                <tr key={pedido.id} className="border-t border-gray-700 align-top">
-                                    <td className="py-5">#{pedido.id}</td>
+                                <tr key={pedido.id} className="hover:bg-slate-800/50 transition-colors">
+                                    <td className="px-6 py-4 font-medium text-white">#{pedido.id}</td>
 
-                                    <td className="px-3 py-5">
-                                        <div>
-                                            {[pedido.Usuario?.nombre, pedido.Usuario?.apellido]
-                                                .filter(Boolean)
-                                                .join(' ') || 'Cliente no disponible'}
+                                    <td className="px-6 py-4">
+                                        <div className="text-white font-medium">
+                                            {[pedido.Usuario?.nombre, pedido.Usuario?.apellido].filter(Boolean).join(' ') || 'Cliente no disponible'}
                                         </div>
-                                        <div className="text-xs text-gray-400">
-                                            {pedido.Usuario?.email || ''}
-                                        </div>
+                                        <div className="text-xs text-slate-500">{pedido.Usuario?.email || ''}</div>
                                     </td>
 
-                                    <td className="px-3 py-5">
-                                        {formatearFecha(pedido.fechaPedido)}
+                                    <td className="px-6 py-4 text-slate-400">{formatearFecha(pedido.fechaPedido)}</td>
+                                    <td className="px-6 py-4 text-right font-medium text-emerald-400">{formatearPrecio(pedido.total)}</td>
+
+                                    <td className="px-6 py-4 text-center">
+                                        <span className={`px-2.5 py-1 rounded-full text-xs font-semibold ${pedido.estado.toLowerCase() === 'pendiente' ? 'bg-amber-400/10 text-amber-400' :
+                                            pedido.estado.toLowerCase() === 'enviado' ? 'bg-blue-400/10 text-blue-400' :
+                                                pedido.estado.toLowerCase() === 'entregado' ? 'bg-emerald-400/10 text-emerald-400' :
+                                                    'bg-red-400/10 text-red-400'
+                                            }`}>
+                                            {pedido.estado}
+                                        </span>
                                     </td>
 
-
-                                    <td className="px-3 py-5">
-                                        {formatearPrecio(pedido.total)}
-                                    </td>
-
-                                    <td className="px-3 py-5">
-                                        {pedido.estado}
-                                    </td>
-                                    <td className="px-3 py-5">
+                                    <td className="px-6 py-4 text-center">
                                         <button
                                             onClick={() => verDetalle(pedido)}
-                                            className="inline-flex cursor-pointer items-center gap-2 rounded-lg bg-[#B00020]/50 px-3 py-2 text-white transition hover:bg-red-800"
+                                            className="inline-flex items-center gap-1.5 rounded-lg bg-blue-600 px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-blue-500 shadow-sm"
                                         >
-                                            <Eye size={16} />
-                                            Ver detalle
+                                            <Eye size={14} /> Ver detalle
                                         </button>
                                     </td>
                                 </tr>
@@ -296,173 +287,96 @@ function Pedidos() {
                         </tbody>
                     </table>
                 </div>
-                {/* Paginación */}
-                <div className="flex flex-col items-center justify-between pl-15 pr-20 pt-8 gap-3 border-slate-200 bg-slate-50/10 px-4 py-3 sm:flex-row rounded-b">
-                    <div className="text-xs text-slate-400">
+
+                {/* PAGINACIÓN */}
+                <div className="flex flex-col items-center justify-between pt-6 gap-3 sm:flex-row">
+                    <div className="text-xs text-slate-500">
                         {totalPaginas > 1 && (
-                            <span> (Página <strong>{pagina}</strong> de <strong>{totalPaginas}</strong>)</span>
+                            <span>Mostrando página <strong>{pagina}</strong> de <strong>{totalPaginas}</strong></span>
                         )}
                     </div>
-
                     <div className="flex items-center gap-1">
-                        <button
-                            onClick={() => setPagina(1)}
-                            disabled={pagina === 1}
-                            className="rounded-lg border border-slate-700 bg-slate-800 px-2.5 py-1.5 text-xs font-medium text-slate-300 transition hover:bg-slate-700 disabled:cursor-not-allowed disabled:opacity-40"
-                            title="Primera página"
-                        >
-                            «
-                        </button>
-
-                        <div className="hidden sm:flex items-center gap-1">
-                            {Array.from({ length: totalPaginas }, (_, i) => i + 1)
-                                .filter((p) => p === 1 || p === totalPaginas || Math.abs(p - pagina) <= 1)
-                                .map((p, idx, arr) => {
-                                    const prev = arr[idx - 1];
-                                    const esPuntitos = prev && p - prev > 1;
-                                    return (
-                                        <div key={p} className="flex items-center gap-1">
-                                            {esPuntitos && <span className="px-1 text-slate-400">...</span>}
-                                            <button
-                                                onClick={() => setPagina(p)}
-                                                className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition cursor-pointer ${pagina === p
-                                                    ? 'bg-blue-800 text-white shadow-sm'
-                                                    : 'border border-slate-700 bg-slate-800 text-slate-300 hover:bg-slate-700'
-                                                    }`}
-                                            >
-                                                {p}
-                                            </button>
-                                        </div>
-                                    );
-                                })}
-                        </div>
-
-                        <button
-                            onClick={() => setPagina(totalPaginas)}
-                            disabled={pagina >= totalPaginas}
-                            className="rounded-lg border border-slate-700 bg-slate-800 px-2.5 py-1.5 text-xs font-medium text-slate-300 transition hover:bg-slate-700 disabled:cursor-not-allowed disabled:opacity-40"
-                            title="Última página"
-                        >
-                            »
-                        </button>
+                        <button onClick={() => setPagina(1)} disabled={pagina === 1} className="rounded-lg border border-slate-700 bg-slate-900 px-3 py-1.5 text-xs font-medium text-slate-300 transition hover:bg-slate-800 disabled:opacity-50">«</button>
+                        {Array.from({ length: totalPaginas }, (_, i) => i + 1)
+                            .filter((p) => p === 1 || p === totalPaginas || Math.abs(p - pagina) <= 1)
+                            .map((p, idx, arr) => {
+                                const prev = arr[idx - 1];
+                                const esPuntitos = prev && p - prev > 1;
+                                return (
+                                    <div key={p} className="flex items-center gap-1">
+                                        {esPuntitos && <span className="px-1 text-slate-500">...</span>}
+                                        <button
+                                            onClick={() => setPagina(p)}
+                                            className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition cursor-pointer ${pagina === p ? 'bg-blue-600 text-white shadow-sm' : 'border border-slate-700 bg-slate-900 text-slate-300 hover:bg-slate-800'
+                                                }`}
+                                        >
+                                            {p}
+                                        </button>
+                                    </div>
+                                );
+                            })}
+                        <button onClick={() => setPagina(totalPaginas)} disabled={pagina >= totalPaginas} className="rounded-lg border border-slate-700 bg-slate-900 px-3 py-1.5 text-xs font-medium text-slate-300 transition hover:bg-slate-800 disabled:opacity-50">»</button>
                     </div>
                 </div>
             </main>
 
-            {/* Modal de detalle: conserva los estilos anteriores */}
+            {/* MODAL DE DETALLE */}
             {pedidoSeleccionado && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 p-4 backdrop-blur-sm" onClick={() => { if (!actualizando) setPedidoSeleccionado(null); }}>
+                    <div className="w-full max-w-2xl rounded-xl border border-slate-800 bg-slate-900 p-6 text-slate-200 shadow-2xl" onClick={(e) => e.stopPropagation()}>
 
-
-                <div
-                    className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm"
-                    onClick={() => {
-                        if (!actualizando) {
-                            setPedidoSeleccionado(null);
-                        }
-                    }}
-                >
-                    <div
-                        className="w-full max-w-2xl rounded-lg border border-gray-700 bg-[#1E1F24] p-6 text-gray-200 shadow-xl"
-                        onClick={(e) => e.stopPropagation()}
-                    >
-                        <div className="mb-5 flex items-center justify-between border-b border-gray-700 pb-3">
-                            <h2 className="text-xl font-semibold text-white">
-                                Detalle del pedido #{pedidoSeleccionado.id}
-                            </h2>
-
-                            <button
-                                onClick={() => setPedidoSeleccionado(null)}
-                                disabled={actualizando}
-                                className="cursor-pointer text-gray-400 transition hover:text-white disabled:opacity-50"
-                                title="Cerrar"
-                            >
-                                <X size={24} />
+                        <div className="mb-5 flex items-center justify-between border-b border-slate-800 pb-3">
+                            <h2 className="text-xl font-bold text-white">Detalle del pedido #{pedidoSeleccionado.id}</h2>
+                            <button onClick={() => setPedidoSeleccionado(null)} disabled={actualizando} className="text-slate-400 hover:text-white transition disabled:opacity-50 text-xl font-bold">
+                                ✕
                             </button>
                         </div>
 
-                        <div className="mb-5 space-y-2 text-sm">
-                            <p>
-                                <span className="text-gray-400">Cliente: </span>
-                                {[pedidoSeleccionado.Usuario?.nombre, pedidoSeleccionado.Usuario?.apellido]
-                                    .filter(Boolean)
-                                    .join(' ') || 'Cliente no disponible'}
-                            </p>
-
-                            <p>
-                                <span className="text-gray-400">Correo: </span>
-                                {pedidoSeleccionado.Usuario?.email || ''}
-                            </p>
-
-                            <p>
-                                <span className="text-gray-400">Fecha: </span>
-                                {formatearFecha(pedidoSeleccionado.fechaPedido)}
-                            </p>
+                        <div className="mb-5 space-y-2 text-sm text-slate-300">
+                            <p><span className="text-slate-500">Cliente: </span>{pedidoSeleccionado.Usuario?.nombre} {pedidoSeleccionado.Usuario?.apellido}</p>
+                            <p><span className="text-slate-500">Correo: </span>{pedidoSeleccionado.Usuario?.email || ''}</p>
+                            <p><span className="text-slate-500">Fecha: </span>{formatearFecha(pedidoSeleccionado.fechaPedido)}</p>
                         </div>
 
-                        <h3 className="mb-3 font-semibold text-white">
-                            Productos
-                        </h3>
-
-                        <div className="max-h-60 overflow-y-auto">
+                        <h3 className="mb-3 font-semibold text-white">Productos</h3>
+                        <div className="max-h-60 overflow-y-auto rounded-lg border border-slate-800">
                             <table className="w-full text-left text-sm">
-                                <thead className="bg-[#070709] text-gray-300">
+                                <thead className="bg-slate-950 text-slate-100 uppercase text-xs tracking-wider font-bold">
                                     <tr>
                                         <th className="p-3">Producto</th>
-                                        <th className="p-3">Cantidad</th>
-                                        <th className="p-3">Precio</th>
-                                        <th className="p-3">Subtotal</th>
+                                        <th className="p-3 text-center">Cantidad</th>
+                                        <th className="p-3 text-right">Precio</th>
+                                        <th className="p-3 text-right">Subtotal</th>
                                     </tr>
                                 </thead>
-
-                                <tbody>
+                                <tbody className="divide-y divide-slate-800/50">
                                     {pedidoSeleccionado.detalles?.length ? (
                                         pedidoSeleccionado.detalles.map((detalle) => (
-                                            <tr key={detalle.id} className="border-b border-gray-700">
-                                                <td className="p-3">
-                                                    {detalle.producto?.nombre || `Producto ${detalle.idProducto}`}
-                                                </td>
-                                                <td className="p-3">{detalle.cantidad}</td>
-                                                <td className="p-3">
-                                                    {formatearPrecio(detalle.precioUnitario)}
-                                                </td>
-                                                <td className="p-3">
-                                                    {formatearPrecio(
-                                                        Number(detalle.precioUnitario) * Number(detalle.cantidad)
-                                                    )}
-                                                </td>
+                                            <tr key={detalle.id} className="hover:bg-slate-800/50 transition-colors">
+                                                <td className="p-3 text-white">{detalle.producto?.nombre || `Producto ${detalle.idProducto}`}</td>
+                                                <td className="p-3 text-center">{detalle.cantidad}</td>
+                                                <td className="p-3 text-right text-slate-400">{formatearPrecio(detalle.precioUnitario)}</td>
+                                                <td className="p-3 text-right font-medium text-emerald-400">{formatearPrecio(Number(detalle.precioUnitario) * Number(detalle.cantidad))}</td>
                                             </tr>
                                         ))
                                     ) : (
-                                        <tr>
-                                            <td colSpan="4" className="p-4 text-center text-gray-400">
-                                                Sin detalles
-                                            </td>
-                                        </tr>
+                                        <tr><td colSpan="4" className="p-4 text-center text-slate-500">Sin detalles</td></tr>
                                     )}
                                 </tbody>
                             </table>
                         </div>
 
-                        <div className="mt-4 border-t border-gray-700 pt-4">
-                            <p className="text-right text-lg font-semibold text-white">
-                                Total: {formatearPrecio(pedidoSeleccionado.total)}
-                            </p>
+                        <div className="mt-4 border-t border-slate-800 pt-4">
+                            <p className="text-right text-lg font-bold text-white">Total: <span className="text-emerald-400">{formatearPrecio(pedidoSeleccionado.total)}</span></p>
                         </div>
 
-                        {/* Único agregado: cambiar el estado */}
-                        <div className="mt-4 border-t border-gray-700 pt-4">
-                            <label className="mb-2 block text-sm text-gray-300">
-                                Estado del pedido
-                            </label>
-
+                        <div className="mt-4 border-t border-slate-800 pt-4">
+                            <label className="mb-2 block text-sm text-slate-400">Estado del pedido</label>
                             <select
                                 value={nuevoEstado}
-                                onChange={(e) => {
-                                    setNuevoEstado(e.target.value);
-                                    setMensajeExito('');
-                                }}
+                                onChange={(e) => { setNuevoEstado(e.target.value); setMensajeExito(''); }}
                                 disabled={actualizando}
-                                className="w-full rounded-lg border border-gray-600 bg-[#070709] p-2 text-white"
+                                className="w-full rounded-lg border border-slate-700 bg-slate-950 p-2.5 text-white focus:outline-none focus:border-blue-500 cursor-pointer"
                             >
                                 <option value="pendiente">Pendiente</option>
                                 <option value="confirmado">Confirmado</option>
@@ -471,32 +385,20 @@ function Pedidos() {
                                 <option value="cancelado">Cancelado</option>
                             </select>
 
-                            {error && (
-                                <p role="alert" className="mt-2 text-sm text-red-400">
-                                    {error}
-                                </p>
-                            )}
+                            {error && <p className="mt-2 text-sm text-red-400">{error}</p>}
+                            {mensajeExito && <p className="mt-2 text-sm text-emerald-400">{mensajeExito}</p>}
 
-                            {mensajeExito && (
-                                <p role="status" className="mt-2 text-sm text-green-400">
-                                    {mensajeExito}
-                                </p>
-                            )}
-
-                            <div className="mt-3 flex justify-end">
+                            <div className="mt-4 flex justify-end">
                                 <button
                                     onClick={cambiarEstado}
-                                    disabled={
-                                        actualizando ||
-                                        !nuevoEstado ||
-                                        nuevoEstado === pedidoSeleccionado.estado
-                                    }
-                                    className="rounded-lg bg-[#B00020] px-4 py-2 text-white transition hover:bg-red-800 disabled:cursor-not-allowed disabled:opacity-50"
+                                    disabled={actualizando || !nuevoEstado || nuevoEstado === pedidoSeleccionado.estado}
+                                    className="rounded-lg bg-blue-600 px-5 py-2 text-sm font-semibold text-white transition hover:bg-blue-500 disabled:opacity-50 shadow-sm cursor-pointer"
                                 >
                                     {actualizando ? 'Actualizando...' : 'Guardar estado'}
                                 </button>
                             </div>
                         </div>
+
                     </div>
                 </div>
             )}
