@@ -199,6 +199,7 @@ function PanelAdmin() {
           <table className="w-full text-center text-sm text-gray-300 ">
             <thead className="bg-[#B00020]/30 text-gray-100">
               <tr>
+                <th className="p-4">Imagen</th>
                 <th className="p-4">Nombre</th>
                 <th className="pr-8 text-right">Precio($)</th>
                 <th className="pr-8 text-right">Stock</th>
@@ -211,7 +212,7 @@ function PanelAdmin() {
                 <tr key={producto.id}>
                   <td className="py-2 px-4 flex justify-center">
                     <img
-                      src={getImagenUrl(producto.imagen)}
+                      src={getImagenUrl(producto.imagenes?.[0]?.url)}
                       alt={producto.nombre}
                       className="w-10 h-10 object-cover rounded bg-slate-800"
                     />
@@ -291,11 +292,10 @@ function PanelAdmin() {
                       )}
                       <button
                         onClick={() => setPagina(p)}
-                        className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition cursor-pointer ${
-                          pagina === p
+                        className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition cursor-pointer ${pagina === p
                             ? "bg-blue-800 text-white shadow-sm"
                             : "border border-slate-700 bg-slate-800 text-slate-300 hover:bg-slate-700"
-                        }`}
+                          }`}
                       >
                         {p}
                       </button>
