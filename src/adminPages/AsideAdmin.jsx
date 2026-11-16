@@ -10,7 +10,7 @@ function AsideAdmin({ isOpen }) {
         <div>
             <aside className={`fixed top-0 left-0 min-w-[16rem] h-screen bg-slate-950 border-r border-slate-800 p-5 z-10 shadow-xl ${isOpen ? 'block' : 'hidden'}`}>
 
-                {/* ENCABEZADO MEJORADO */}
+                {/* ENCABEZADO*/}
                 <div className='mt-2 mb-4 flex flex-col gap-1'>
                     <div className="flex items-center gap-2">
                         <span className="bg-gradient-to-br from-blue-500 to-blue-700 text-white p-1.5 rounded-md text-xs font-bold shadow-lg shadow-blue-500/30">

@@ -1,32 +1,49 @@
-import { useState, useEffect } from 'react';
-import { ProductContext } from './ProductContext';
+import { useState, useEffect } from "react";
+import { ProductContext } from "./ProductContext";
+import { obtenerItems } from "../services/api.js";
 
 export const ProductProvider = ({ children }) => {
   const [productos, setProductos] = useState([]);
-  const [cargando, setCargando] = useState(false);
+  const [categorias, setCategorias] = useState([]);
+  const [cargando, setCargando] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     let mounted = true;
 
     const cargar = async () => {
       setCargando(true);
+      setError(null);
       try {
-        const response = await fetch('http://localhost:3000/productos');
-        const data = await response.json();
+        const [productosResp, categoriasResp] = await Promise.all([
+          obtenerItems("productos"),
+          obtenerItems("categorias"),
+        ]);
 
-        if (mounted) {
-          if (Array.isArray(data)) {
-            setProductos(data);
-          } else if (Array.isArray(data.productos)) {
-            setProductos(data.productos);
-          } else if (Array.isArray(data.data)) {
-            setProductos(data.data);
-          } else {
-            setProductos([]);
-          }
+        if (!mounted) return;
+
+        if (Array.isArray(productosResp)) {
+          setProductos(productosResp);
+        } else if (Array.isArray(productosResp?.productos)) {
+          setProductos(productosResp.productos);
+        } else {
+          setProductos([]);
         }
-      } catch (error) {
-        console.error('Error al obtener productos:', error);
+
+        if (Array.isArray(categoriasResp)) {
+          setCategorias(categoriasResp);
+        } else if (Array.isArray(categoriasResp?.categorias)) {
+          setCategorias(categoriasResp.categorias);
+        } else {
+          setCategorias([]);
+        }
+      } catch (err) {
+        console.error("Error al cargar productos/categorías:", err);
+        if (mounted) {
+          setError(err.message || "Error al cargar los datos");
+          setProductos([]);
+          setCategorias([]);
+        }
       } finally {
         if (mounted) setCargando(false);
       }
@@ -40,7 +57,7 @@ export const ProductProvider = ({ children }) => {
   }, []);
 
   return (
-    <ProductContext.Provider value={{ productos, cargando }}>
+    <ProductContext.Provider value={{ productos, categorias, cargando, error }}>
       {children}
     </ProductContext.Provider>
   );

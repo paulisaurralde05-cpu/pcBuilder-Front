@@ -8,7 +8,8 @@ import { getImagenUrl } from '../utils/helpers.js';
 
 export const Home = () => {
   const navigate = useNavigate();
-  const { productos = [], categorias = [] } = useContext(ProductContext) || {};
+  const { productos = [], categorias = [], cargando = false } =
+        useContext(ProductContext) || {};
   const { fetchCarrito } = useCart();
 
   const [busqueda, setBusqueda] = useState('');
@@ -25,7 +26,7 @@ export const Home = () => {
       const coincideBusqueda = prod.nombre.toLowerCase().includes(busqueda.toLowerCase());
 
       const coincideCategoria = categoriaSeleccionada === '' ||
-        String(prod.categoryId || prod.categoriaId || prod.categoria) === String(categoriaSeleccionada);
+        String(prod.idCategoria) === String(categoriaSeleccionada);
 
       return coincideBusqueda && coincideCategoria;
     });
@@ -154,7 +155,7 @@ export const Home = () => {
             >
               <option value="">Todas las categorías</option>
               {categorias.map((cat) => (
-                <option key={cat.id || cat._id} value={cat.id || cat._id}>
+                <option key={cat.id} value={cat.id}>
                   {cat.nombre}
                 </option>
               ))}
